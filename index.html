@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nibo News · L'info qui circule</title>
+<meta name="description" content="Nibo News — l'actualité haïtienne et internationale en bref. Politique, sport, social, économie, international, potins.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a href="index.html" class="logo">
+      <span class="logo-mark">N</span>
+      <span class="logo-txt">Nibo<b>News</b></span>
+    </a>
+    <div class="nav-actions">
+      <a href="connexion.html" class="btn-connexion">Se connecter</a>
+    </div>
+  </div>
+</header>
+
+<nav class="rubriques">
+  <div class="rubriques-inner">
+    <button class="rub-chip on" data-rub="tous">Tout</button>
+    <button class="rub-chip r-politique" data-rub="politique">Politique</button>
+    <button class="rub-chip r-sport" data-rub="sport">Sport</button>
+    <button class="rub-chip r-social" data-rub="social">Social</button>
+    <button class="rub-chip r-economie" data-rub="economie">Économie</button>
+    <button class="rub-chip r-international" data-rub="international">International</button>
+    <button class="rub-chip r-potins" data-rub="potins">Potins</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <h1>L'info qui <b>circule</b></h1>
+  <p>Courte. Claire. Partageable. L'actualité en un coup d'œil, prête à relayer.</p>
+</section>
+
+<main class="fil" id="fil">
+  <!-- Les posts seront chargés ici. Exemples de démonstration ci-dessous. -->
+
+  <article class="post r-politique">
+    <div class="post-visuel court">
+      <div class="post-head">
+        <span class="post-rub">Politique</span>
+        <span class="post-nino">Nibo<b>News</b></span>
+      </div>
+      <p class="post-texte">Le budget 2026 adopté après une nuit de débats. Les priorités : éducation, sécurité, infrastructures.</p>
+      <div class="post-foot">
+        <span class="post-date">Aujourd'hui, 09:12</span>
+        <span class="post-watermark">Nibo<b>News</b></span>
+      </div>
+    </div>
+    <div class="post-actions">
+      <button class="act like"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg><span class="act-count">128</span></button>
+      <button class="act comment"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.5 8.5 0 0 1-11.7 7.9L3 21l1.6-6.3A8.5 8.5 0 1 1 21 11.5z"/></svg><span class="act-count">24</span></button>
+      <button class="act share act-share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-8"/><path d="M16 6l-4-4-4 4"/><path d="M12 2v14"/></svg><span>Partager</span></button>
+      <button class="act act-dl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg><span>Image</span></button>
+    </div>
+  </article>
+
+  <article class="post r-sport">
+    <div class="post-visuel court">
+      <div class="post-head">
+        <span class="post-rub">Sport</span>
+        <span class="post-nino">Nibo<b>News</b></span>
+      </div>
+      <p class="post-texte">Les Grenadiers s'imposent 2-0 en amical. Un signal fort avant les qualifications.</p>
+      <div class="post-foot">
+        <span class="post-date">Aujourd'hui, 08:40</span>
+        <span class="post-watermark">Nibo<b>News</b></span>
+      </div>
+    </div>
+    <div class="post-actions">
+      <button class="act like"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg><span class="act-count">342</span></button>
+      <button class="act comment"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.5 8.5 0 0 1-11.7 7.9L3 21l1.6-6.3A8.5 8.5 0 1 1 21 11.5z"/></svg><span class="act-count">56</span></button>
+      <button class="act share act-share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-8"/><path d="M16 6l-4-4-4 4"/><path d="M12 2v14"/></svg><span>Partager</span></button>
+      <button class="act act-dl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg><span>Image</span></button>
+    </div>
+  </article>
+
+  <article class="post r-social">
+    <div class="post-visuel court">
+      <div class="post-head">
+        <span class="post-rub">Social</span>
+        <span class="post-nino">Nibo<b>News</b></span>
+      </div>
+      <p class="post-texte">Une collecte solidaire réunit 500 familles autour d'un même repas à Port-au-Prince.</p>
+      <div class="post-foot">
+        <span class="post-date">Hier, 17:30</span>
+        <span class="post-watermark">Nibo<b>News</b></span>
+      </div>
+    </div>
+    <div class="post-actions">
+      <button class="act like"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg><span class="act-count">211</span></button>
+      <button class="act comment"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.5 8.5 0 0 1-11.7 7.9L3 21l1.6-6.3A8.5 8.5 0 1 1 21 11.5z"/></svg><span class="act-count">38</span></button>
+      <button class="act share act-share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-8"/><path d="M16 6l-4-4-4 4"/><path d="M12 2v14"/></svg><span>Partager</span></button>
+      <button class="act act-dl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg><span>Image</span></button>
+    </div>
+  </article>
+
+  <article class="post r-economie">
+    <div class="post-visuel court">
+      <div class="post-head">
+        <span class="post-rub">Économie</span>
+        <span class="post-nino">Nibo<b>News</b></span>
+      </div>
+      <p class="post-texte">La gourde se stabilise face au dollar. Les commerçants respirent un peu.</p>
+      <div class="post-foot">
+        <span class="post-date">Hier, 14:05</span>
+        <span class="post-watermark">Nibo<b>News</b></span>
+      </div>
+    </div>
+    <div class="post-actions">
+      <button class="act like"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg><span class="act-count">97</span></button>
+      <button class="act comment"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.5 8.5 0 0 1-11.7 7.9L3 21l1.6-6.3A8.5 8.5 0 1 1 21 11.5z"/></svg><span class="act-count">19</span></button>
+      <button class="act share act-share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-8"/><path d="M16 6l-4-4-4 4"/><path d="M12 2v14"/></svg><span>Partager</span></button>
+      <button class="act act-dl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg><span>Image</span></button>
+    </div>
+  </article>
+
+  <article class="post r-international">
+    <div class="post-visuel court">
+      <div class="post-head">
+        <span class="post-rub">International</span>
+        <span class="post-nino">Nibo<b>News</b></span>
+      </div>
+      <p class="post-texte">Sommet climatique : 40 pays s'engagent à réduire leurs émissions d'ici 2030.</p>
+      <div class="post-foot">
+        <span class="post-date">Hier, 11:20</span>
+        <span class="post-watermark">Nibo<b>News</b></span>
+      </div>
+    </div>
+    <div class="post-actions">
+      <button class="act like"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg><span class="act-count">156</span></button>
+      <button class="act comment"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.5 8.5 0 0 1-11.7 7.9L3 21l1.6-6.3A8.5 8.5 0 1 1 21 11.5z"/></svg><span class="act-count">42</span></button>
+      <button class="act share act-share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-8"/><path d="M16 6l-4-4-4 4"/><path d="M12 2v14"/></svg><span>Partager</span></button>
+      <button class="act act-dl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg><span>Image</span></button>
+    </div>
+  </article>
+
+  <article class="post r-potins">
+    <div class="post-visuel court">
+      <div class="post-head">
+        <span class="post-rub">Potins</span>
+        <span class="post-nino">Nibo<b>News</b></span>
+      </div>
+      <p class="post-texte">Un artiste local surprend ses fans avec un album annoncé à minuit. Les réseaux s'enflamment.</p>
+      <div class="post-foot">
+        <span class="post-date">Hier, 22:00</span>
+        <span class="post-watermark">Nibo<b>News</b></span>
+      </div>
+    </div>
+    <div class="post-actions">
+      <button class="act like"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg><span class="act-count">489</span></button>
+      <button class="act comment"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.5 8.5 0 0 1-11.7 7.9L3 21l1.6-6.3A8.5 8.5 0 1 1 21 11.5z"/></svg><span class="act-count">73</span></button>
+      <button class="act share act-share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-8"/><path d="M16 6l-4-4-4 4"/><path d="M12 2v14"/></svg><span>Partager</span></button>
+      <button class="act act-dl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg><span>Image</span></button>
+    </div>
+  </article>
+
+</main>
+
+<script src="js/main.js"></script>
+</body>
+</html>

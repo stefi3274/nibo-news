@@ -1,0 +1,165 @@
+/* ============================================================
+   Nibo News — média de relais
+   Fond gris ardoise · thème pourpre · 6 rubriques colorées
+   ============================================================ */
+:root{
+  /* Base */
+  --gris:#1a1a1f;          /* fond principal, gris très sombre */
+  --gris-2:#24242c;        /* cartes, surfaces */
+  --gris-3:#2f2f39;        /* survol, bordures */
+  --gris-line:#37373f;
+  --blanc:#f4f4f7;
+  --texte:#e6e6ec;
+  --texte-doux:#9a9aa8;
+  --texte-faible:#6b6b78;
+
+  /* Pourpre — thème principal */
+  --pourpre:#8b3fd4;
+  --pourpre-c:#a45ee8;     /* clair */
+  --pourpre-d:#6d2bb0;     /* foncé */
+  --pourpre-glow:rgba(139,63,212,.25);
+
+  /* Rubriques */
+  --politique:#c0392b;     /* rouge grave */
+  --sport:#27ae60;         /* vert vif */
+  --social:#e67e22;        /* orange chaleureux */
+  --economie:#2980b9;      /* bleu confiance */
+  --international:#16a5a5;  /* sarcelle */
+  --potins:#d6438b;        /* rose magazine */
+
+  --serif:'Fraunces',Georgia,serif;
+  --sans:'Inter',system-ui,sans-serif;
+  --r:16px;
+  --r-lg:22px;
+  --wrap:640px;   /* colonne centrale façon fil social */
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--gris);color:var(--texte);font-family:var(--sans);line-height:1.6;
+  font-size:16px;-webkit-font-smoothing:antialiased}
+
+/* Couleurs par rubrique (variable --c injectée) */
+.r-politique{--c:var(--politique)}
+.r-sport{--c:var(--sport)}
+.r-social{--c:var(--social)}
+.r-economie{--c:var(--economie)}
+.r-international{--c:var(--international)}
+.r-potins{--c:var(--potins)}
+
+/* ============================================================
+   En-tête / barre de navigation
+   ============================================================ */
+header{position:sticky;top:0;z-index:100;background:rgba(26,26,31,.85);
+  backdrop-filter:blur(14px);border-bottom:1px solid var(--gris-line)}
+.nav{max-width:var(--wrap);margin:0 auto;display:flex;align-items:center;
+  justify-content:space-between;padding:14px 20px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-mark{width:38px;height:38px;border-radius:11px;
+  background:linear-gradient(135deg,var(--pourpre-c),var(--pourpre-d));
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);font-weight:600;font-size:1.4rem;color:#fff;
+  box-shadow:0 4px 16px var(--pourpre-glow)}
+.logo-txt{font-family:var(--serif);font-size:1.5rem;font-weight:600;color:var(--blanc);letter-spacing:-.01em}
+.logo-txt b{color:var(--pourpre-c);font-weight:600}
+.nav-actions{display:flex;align-items:center;gap:10px}
+.btn-connexion{background:none;border:1px solid var(--gris-3);color:var(--texte);
+  font-family:inherit;font-weight:600;font-size:.88rem;padding:9px 18px;border-radius:10px;
+  cursor:pointer;text-decoration:none;transition:all .2s}
+.btn-connexion:hover{border-color:var(--pourpre);color:var(--pourpre-c)}
+
+/* ============================================================
+   Filtres de rubriques
+   ============================================================ */
+.rubriques{position:sticky;top:67px;z-index:90;background:rgba(26,26,31,.8);
+  backdrop-filter:blur(14px);border-bottom:1px solid var(--gris-line);overflow-x:auto;
+  -ms-overflow-style:none;scrollbar-width:none}
+.rubriques::-webkit-scrollbar{display:none}
+.rubriques-inner{max-width:var(--wrap);margin:0 auto;display:flex;gap:8px;padding:12px 20px}
+.rub-chip{flex:0 0 auto;background:none;border:1.5px solid var(--gris-3);color:var(--texte-doux);
+  font-family:inherit;font-weight:600;font-size:.85rem;padding:7px 15px;border-radius:20px;
+  cursor:pointer;transition:all .2s;white-space:nowrap}
+.rub-chip:hover{border-color:var(--c,var(--pourpre));color:var(--blanc)}
+.rub-chip.on{background:var(--c,var(--pourpre));border-color:var(--c,var(--pourpre));color:#fff}
+
+/* ============================================================
+   Fil de posts
+   ============================================================ */
+.fil{max-width:var(--wrap);margin:0 auto;padding:24px 20px 80px}
+
+/* Carte post = l'image elle-même */
+.post{background:var(--gris-2);border:1px solid var(--gris-line);border-radius:var(--r-lg);
+  margin-bottom:20px;overflow:hidden;transition:border-color .2s}
+.post:hover{border-color:var(--gris-3)}
+
+/* Zone capturée pour le téléchargement (le "visuel") */
+.post-visuel{position:relative;padding:26px 26px 30px;
+  background:linear-gradient(160deg, color-mix(in srgb, var(--c) 16%, var(--gris-2)), var(--gris-2) 70%);
+  border-top:4px solid var(--c)}
+.post-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.post-rub{display:inline-flex;align-items:center;gap:7px;font-size:.78rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.08em;color:var(--c)}
+.post-rub::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c)}
+.post-nino{font-family:var(--serif);font-size:.95rem;font-weight:600;color:var(--texte-doux)}
+.post-nino b{color:var(--pourpre-c)}
+.post-texte{font-family:var(--serif);font-size:1.5rem;line-height:1.4;color:var(--blanc);
+  font-weight:500;letter-spacing:-.01em}
+.post-visuel.court .post-texte{font-size:1.9rem;line-height:1.35}
+.post-foot{display:flex;align-items:center;gap:8px;margin-top:22px;padding-top:16px;
+  border-top:1px solid color-mix(in srgb, var(--c) 20%, transparent)}
+.post-foot .pf-dot{width:5px;height:5px;border-radius:50%;background:var(--texte-faible)}
+.post-date{font-size:.82rem;color:var(--texte-doux)}
+.post-watermark{margin-left:auto;font-family:var(--serif);font-size:.85rem;color:var(--texte-faible)}
+.post-watermark b{color:var(--pourpre-c)}
+
+/* Barre d'actions (hors visuel) */
+.post-actions{display:flex;align-items:center;gap:4px;padding:10px 16px;background:var(--gris-2)}
+.act{display:inline-flex;align-items:center;gap:7px;background:none;border:0;
+  color:var(--texte-doux);font-family:inherit;font-size:.85rem;font-weight:600;
+  padding:9px 12px;border-radius:10px;cursor:pointer;transition:all .2s}
+.act:hover{background:var(--gris-3);color:var(--blanc)}
+.act.like:hover{color:#e0245e}
+.act.like.on{color:#e0245e}
+.act svg{width:18px;height:18px}
+.act-count{font-variant-numeric:tabular-nums}
+.act-share{margin-left:auto}
+.act-dl{color:var(--pourpre-c)}
+.act-dl:hover{background:var(--pourpre-glow);color:var(--pourpre-c)}
+
+/* Menu de partage */
+.share-menu{display:none;gap:6px;padding:8px 16px 14px;background:var(--gris-2);flex-wrap:wrap}
+.share-menu.open{display:flex}
+.share-btn{display:inline-flex;align-items:center;gap:6px;font-family:inherit;font-weight:600;
+  font-size:.82rem;padding:8px 14px;border-radius:9px;border:0;cursor:pointer;color:#fff;text-decoration:none}
+.share-wa{background:#25d366}
+.share-fb{background:#1877f2}
+.share-x{background:#000;border:1px solid #333}
+.share-tg{background:#0088cc}
+
+/* Format de téléchargement (carré / story) */
+.dl-menu{display:none;gap:8px;padding:8px 16px 14px;background:var(--gris-2)}
+.dl-menu.open{display:flex}
+.dl-opt{flex:1;background:var(--gris-3);border:1px solid var(--gris-line);color:var(--texte);
+  font-family:inherit;font-weight:600;font-size:.82rem;padding:10px;border-radius:9px;cursor:pointer;transition:all .2s}
+.dl-opt:hover{border-color:var(--pourpre);color:var(--pourpre-c)}
+
+/* ============================================================
+   Hero d'accueil
+   ============================================================ */
+.hero{max-width:var(--wrap);margin:0 auto;padding:40px 20px 8px;text-align:center}
+.hero h1{font-family:var(--serif);font-size:clamp(2rem,6vw,2.8rem);font-weight:600;
+  color:var(--blanc);letter-spacing:-.02em;line-height:1.1;margin-bottom:12px}
+.hero h1 b{color:var(--pourpre-c);font-weight:600}
+.hero p{color:var(--texte-doux);font-size:1.05rem;max-width:440px;margin:0 auto}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width:520px){
+  .post-texte{font-size:1.3rem}
+  .post-visuel.court .post-texte{font-size:1.6rem}
+  .act span:not(.act-count){display:none}
+  .act{padding:9px 10px}
+}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
