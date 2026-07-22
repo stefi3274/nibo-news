@@ -37,14 +37,17 @@
   }
 
   async function charger() {
-    if (typeof DB === "undefined" || !DB || !fil) { brancher(); return; }
+    if (!fil) return;
+    const vide = document.getElementById("filVide");
+    if (typeof DB === "undefined" || !DB) { brancher(); return; }
     const ent = await entrepriseId();
     if (!ent) { brancher(); return; }
     const { data, error } = await DB.from("posts").select("*").eq("statut","publie").order("created_at",{ascending:false}).limit(50);
     if (error || !data || !data.length) {
-      // garder les exemples déjà en place s'il n'y a pas encore de vrais posts
+      // Pas encore de posts : on garde l'état vide
       brancher(); return;
     }
+    if (vide) vide.remove();
     fil.innerHTML = data.map(carte).join("");
     brancher();
   }
@@ -55,9 +58,26 @@
     chips.forEach(chip => chip.addEventListener("click", () => {
       chips.forEach(c => c.classList.toggle("on", c === chip));
       const rub = chip.getAttribute("data-rub");
-      document.querySelectorAll(".post").forEach(p => {
-        p.style.display = (rub === "tous" || p.classList.contains("r-" + rub)) ? "" : "none";
+      const posts = document.querySelectorAll(".post");
+      let visibles = 0;
+      posts.forEach(p => {
+        const ok = (rub === "tous" || p.classList.contains("r-" + rub));
+        p.style.display = ok ? "" : "none";
+        if (ok) visibles++;
       });
+      // Message si la rubrique choisie n'a aucun post
+      let vide = document.getElementById("rubVide");
+      if (posts.length && visibles === 0) {
+        if (!vide) {
+          vide = document.createElement("div");
+          vide.id = "rubVide"; vide.className = "fil-vide";
+          vide.innerHTML = '<h2>Rien dans cette rubrique</h2><p>Aucune actualité publiée ici pour le moment.</p>';
+          fil.appendChild(vide);
+        }
+        vide.style.display = "";
+      } else if (vide) {
+        vide.style.display = "none";
+      }
     }));
   }
 

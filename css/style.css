@@ -182,3 +182,13 @@ header{position:sticky;top:0;z-index:100;background:rgba(26,26,31,.85);
 .nl-msg{margin-top:14px;font-size:.9rem;min-height:20px}
 .nl-msg.ok{color:#4ade80}
 .nl-msg.err{color:#f87171}
+
+/* État vide du fil */
+.fil-vide{text-align:center;padding:70px 24px;background:var(--gris-2);
+  border:1px dashed var(--gris-3);border-radius:var(--r-lg)}
+.fv-icone{width:60px;height:60px;margin:0 auto 18px;border-radius:16px;
+  background:linear-gradient(135deg,var(--pourpre-c),var(--pourpre-d));
+  display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px var(--pourpre-glow)}
+.fv-icone svg{width:30px;height:30px;color:#fff}
+.fil-vide h2{font-family:var(--serif);font-size:1.5rem;color:var(--blanc);margin-bottom:10px}
+.fil-vide p{color:var(--texte-doux);max-width:360px;margin:0 auto;font-size:.95rem}
