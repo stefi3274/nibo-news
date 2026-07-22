@@ -114,22 +114,24 @@
     });
 
     document.querySelectorAll(".act.share").forEach(btn => {
-      btn.addEventListener("click", () => {
+      btn.addEventListener("click", async () => {
         const post = btn.closest(".post");
-        let menu = post.querySelector(".share-menu");
-        if (!menu) {
-          menu = document.createElement("div"); menu.className = "share-menu";
-          const txt = encodeURIComponent(post.querySelector(".post-texte").textContent + " — via Nibo News");
-          const url = encodeURIComponent(location.href);
-          menu.innerHTML =
-            '<a class="share-btn share-wa" href="https://wa.me/?text=' + txt + '" target="_blank" rel="noopener">WhatsApp</a>'
-            + '<a class="share-btn share-fb" href="https://www.facebook.com/sharer/sharer.php?u=' + url + '" target="_blank" rel="noopener">Facebook</a>'
-            + '<a class="share-btn share-x" href="https://twitter.com/intent/tweet?text=' + txt + '" target="_blank" rel="noopener">X</a>'
-            + '<a class="share-btn share-tg" href="https://t.me/share/url?url=' + url + '&text=' + txt + '" target="_blank" rel="noopener">Telegram</a>';
-          btn.closest(".post-actions").after(menu);
+        const id = post.getAttribute("data-id");
+        const donnees = postDepuisCarte(post);
+        const lien = location.origin + location.pathname.replace(/[^/]*$/, "") + (id ? "post.html?id=" + id : "");
+        const label = btn.querySelector("span:not(.act-count)");
+        const avant = label ? label.textContent : "";
+        if (label) label.textContent = "Préparation…";
+        btn.disabled = true;
+        try {
+          const r = await window.NiboImage.partager(donnees, lien, "carre");
+          if (label) label.textContent = (r === "telecharge") ? "Image téléchargée" : avant;
+          if (r === "telecharge") menuReplis(post, btn, donnees, lien);
+        } catch (e) {
+          if (label) label.textContent = avant;
+          menuReplis(post, btn, donnees, lien);
         }
-        menu.classList.toggle("open");
-        const dl = post.querySelector(".dl-menu"); if (dl) dl.classList.remove("open");
+        setTimeout(() => { if (label) label.textContent = avant; btn.disabled = false; }, 2200);
       });
     });
 
@@ -161,6 +163,24 @@
         const sh = post.querySelector(".share-menu"); if (sh) sh.classList.remove("open");
       });
     });
+  }
+
+  // Menu de repli (ordinateur ou téléphone sans partage natif)
+  function menuReplis(post, btn, donnees, lien) {
+    let menu = post.querySelector(".share-menu");
+    if (!menu) {
+      menu = document.createElement("div"); menu.className = "share-menu";
+      const txt = encodeURIComponent((donnees.texte||"") + (donnees.source ? " (Source : " + donnees.source + ")" : "") + " — via Nibo News");
+      const url = encodeURIComponent(lien);
+      menu.innerHTML =
+        '<a class="share-btn share-wa" href="https://wa.me/?text=' + txt + '%20' + url + '" target="_blank" rel="noopener">WhatsApp</a>'
+        + '<a class="share-btn share-fb" href="https://www.facebook.com/sharer/sharer.php?u=' + url + '" target="_blank" rel="noopener">Facebook</a>'
+        + '<a class="share-btn share-x" href="https://twitter.com/intent/tweet?text=' + txt + '&url=' + url + '" target="_blank" rel="noopener">X</a>'
+        + '<a class="share-btn share-tg" href="https://t.me/share/url?url=' + url + '&text=' + txt + '" target="_blank" rel="noopener">Telegram</a>'
+        + '<span class="share-note">L\'image a été téléchargée : joins-la à ton message.</span>';
+      btn.closest(".post-actions").after(menu);
+    }
+    menu.classList.add("open");
   }
 
   // Reconstitue les données d'un post depuis sa carte affichée

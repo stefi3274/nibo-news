@@ -195,6 +195,16 @@
     }, "image/png");
   }
 
+  // Convertit le canvas en fichier image
+  function versFichier(cv, nom) {
+    return new Promise(resolve => {
+      cv.toBlob(blob => {
+        if (!blob) return resolve(null);
+        resolve(new File([blob], nom + ".png", { type: "image/png" }));
+      }, "image/png");
+    });
+  }
+
   // API publique
   window.NiboImage = {
     async generer(post, format) {
@@ -205,6 +215,39 @@
     },
     async apercu(post, format) {
       return await dessiner(post, format);
+    },
+    // Partage natif : image + texte + lien en un seul geste
+    async partager(post, lien, format) {
+      const fmt = format || "carre";
+      const cv = await dessiner(post, fmt);
+      const slug = (post.texte||"post").slice(0,24).replace(/[^a-zA-Z0-9]+/g,"-").replace(/^-|-$/g,"").toLowerCase();
+      const fichier = await versFichier(cv, "nibonews-" + (slug||"post"));
+
+      const texte = (post.texte || "") + (post.source ? "\n\nSource : " + post.source : "") + "\n\nvia Nibo News";
+
+      // 1) Partage natif AVEC l'image (mobile moderne)
+      if (fichier && navigator.canShare && navigator.canShare({ files: [fichier] })) {
+        try {
+          await navigator.share({ files: [fichier], text: texte, url: lien });
+          return "image";
+        } catch (e) {
+          if (e && e.name === "AbortError") return "annule";   // l'utilisateur a fermé
+        }
+      }
+
+      // 2) Partage natif SANS image (texte + lien)
+      if (navigator.share) {
+        try {
+          await navigator.share({ text: texte, url: lien });
+          return "texte";
+        } catch (e) {
+          if (e && e.name === "AbortError") return "annule";
+        }
+      }
+
+      // 3) Repli : téléchargement de l'image
+      telecharger(cv, "nibonews-" + (slug||"post") + "-" + fmt);
+      return "telecharge";
     }
   };
 })();

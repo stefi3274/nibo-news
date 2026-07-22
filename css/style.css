@@ -195,3 +195,87 @@ header{position:sticky;top:0;z-index:100;background:rgba(26,26,31,.85);
 
 /* Source du post (crédibilité du relais) */
 .post-source{font-size:.82rem;color:var(--texte-doux);font-style:italic}
+
+/* Note du menu de partage de repli */
+.share-note{width:100%;font-size:.8rem;color:var(--texte-faible);font-style:italic;padding-top:4px}
+
+/* ============================================================
+   Pied de page du site
+   ============================================================ */
+footer{border-top:1px solid var(--gris-line);background:var(--gris-2);margin-top:40px}
+.foot-inner{max-width:var(--wrap);margin:0 auto;padding:34px 20px 26px}
+.foot-haut{display:flex;justify-content:space-between;gap:26px;flex-wrap:wrap;margin-bottom:24px}
+.foot-marque{max-width:260px}
+.foot-marque .logo{margin-bottom:10px}
+.foot-marque p{color:var(--texte-doux);font-size:.88rem;line-height:1.55}
+.foot-liens{display:flex;gap:40px;flex-wrap:wrap}
+.foot-col h4{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--texte-faible);margin-bottom:12px}
+.foot-col a{display:block;color:var(--texte-doux);text-decoration:none;font-size:.9rem;
+  margin-bottom:9px;transition:color .2s}
+.foot-col a:hover{color:var(--pourpre-c)}
+.foot-bas{border-top:1px solid var(--gris-line);padding-top:18px;display:flex;
+  justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:.82rem;color:var(--texte-faible)}
+.foot-bas a{color:var(--texte-doux);text-decoration:none}
+.foot-bas a:hover{color:var(--pourpre-c)}
+
+/* ============================================================
+   Pages de contenu (à propos, mentions, contact)
+   ============================================================ */
+.page{max-width:var(--wrap);margin:0 auto;padding:40px 20px 70px}
+.page-kicker{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--pourpre-c);margin-bottom:10px}
+.page h1{font-family:var(--serif);font-size:clamp(1.9rem,5vw,2.6rem);color:var(--blanc);
+  line-height:1.15;margin-bottom:16px;letter-spacing:-.02em}
+.page .chapo{font-size:1.1rem;color:var(--texte-doux);line-height:1.65;margin-bottom:34px}
+.page h2{font-family:var(--serif);font-size:1.45rem;color:var(--blanc);margin:34px 0 12px}
+.page h3{font-size:1.05rem;font-weight:600;color:var(--texte);margin:22px 0 8px}
+.page p{color:var(--texte);line-height:1.75;margin-bottom:14px}
+.page ul{margin:0 0 16px 20px;color:var(--texte)}
+.page li{margin-bottom:8px;line-height:1.65}
+.page a{color:var(--pourpre-c);text-decoration:none}
+.page a:hover{text-decoration:underline}
+.encart{background:var(--gris-2);border:1px solid var(--gris-line);border-left:4px solid var(--pourpre);
+  border-radius:0 var(--r) var(--r) 0;padding:20px 24px;margin:26px 0}
+.encart p:last-child{margin-bottom:0}
+.valeurs{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:24px 0}
+.valeur{background:var(--gris-2);border:1px solid var(--gris-line);border-radius:var(--r);padding:20px}
+.valeur .v-pastille{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;
+  justify-content:center;margin-bottom:12px;background:var(--pourpre-glow)}
+.valeur .v-pastille svg{width:19px;height:19px;color:var(--pourpre-c)}
+.valeur h3{margin:0 0 6px;font-family:var(--serif);font-size:1.1rem;color:var(--blanc)}
+.valeur p{font-size:.88rem;color:var(--texte-doux);margin:0;line-height:1.55}
+
+/* Contact */
+.contact-grid{display:grid;grid-template-columns:1fr;gap:16px;margin-bottom:32px}
+.contact-carte{background:var(--gris-2);border:1px solid var(--gris-line);border-radius:var(--r);
+  padding:20px 22px;display:flex;align-items:center;gap:16px;text-decoration:none;transition:border-color .2s}
+.contact-carte:hover{border-color:var(--pourpre)}
+.cc-icone{width:44px;height:44px;border-radius:12px;background:var(--pourpre-glow);flex:0 0 auto;
+  display:flex;align-items:center;justify-content:center}
+.cc-icone svg{width:21px;height:21px;color:var(--pourpre-c)}
+.cc-txt h3{margin:0 0 2px;font-size:1rem;font-weight:600;color:var(--blanc)}
+.cc-txt p{margin:0;font-size:.88rem;color:var(--texte-doux)}
+.form-carte{background:var(--gris-2);border:1px solid var(--gris-line);border-radius:var(--r);padding:26px}
+.form-carte h2{margin-top:0}
+.f-field{margin-bottom:16px}
+.f-field label{display:block;font-size:.82rem;font-weight:600;margin-bottom:6px;color:var(--texte)}
+.f-field input,.f-field select,.f-field textarea{width:100%;background:var(--gris);border:1px solid var(--gris-3);
+  border-radius:10px;padding:12px 14px;font-family:inherit;font-size:.98rem;color:var(--texte)}
+.f-field input:focus,.f-field select:focus,.f-field textarea:focus{outline:none;border-color:var(--pourpre)}
+.f-field textarea{min-height:110px;resize:vertical;line-height:1.55}
+.f-field .hint{font-size:.8rem;color:var(--texte-faible);margin-top:5px}
+.btn-p{background:var(--pourpre);color:#fff;border:0;font-family:inherit;font-weight:600;font-size:.95rem;
+  padding:12px 24px;border-radius:11px;cursor:pointer;transition:background .2s}
+.btn-p:hover{background:var(--pourpre-d)}
+.f-msg{display:none;padding:11px 14px;border-radius:10px;font-size:.9rem;margin-bottom:14px}
+.f-msg.on{display:block}
+.f-msg.ok{background:rgba(39,174,96,.15);color:#4ade80}
+.f-msg.err{background:rgba(192,57,43,.15);color:#f87171}
+@media (min-width:560px){.contact-grid{grid-template-columns:1fr 1fr}}
+
+/* Lien de navigation dans l'en-tête */
+.nav-lien{color:var(--texte-doux);text-decoration:none;font-size:.9rem;font-weight:600;
+  padding:9px 12px;transition:color .2s}
+.nav-lien:hover{color:var(--pourpre-c)}
+@media (max-width:420px){.nav-lien{display:none}}

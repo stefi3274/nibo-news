@@ -69,21 +69,33 @@
       try { localStorage.setItem("nibo_likes", JSON.stringify([...liked])); } catch {}
     });
 
-    // Partage
-    document.querySelector(".act.share").addEventListener("click", () => {
-      let menu = document.querySelector(".share-menu");
-      if (!menu) {
-        menu = document.createElement("div"); menu.className = "share-menu";
-        const txt = encodeURIComponent(p.texte + " — via Nibo News");
-        const url = encodeURIComponent(location.href);
-        menu.innerHTML =
-          '<a class="share-btn share-wa" href="https://wa.me/?text=' + txt + '%20' + url + '" target="_blank" rel="noopener">WhatsApp</a>'
-          + '<a class="share-btn share-fb" href="https://www.facebook.com/sharer/sharer.php?u=' + url + '" target="_blank" rel="noopener">Facebook</a>'
-          + '<a class="share-btn share-x" href="https://twitter.com/intent/tweet?text=' + txt + '&url=' + url + '" target="_blank" rel="noopener">X</a>'
-          + '<a class="share-btn share-tg" href="https://t.me/share/url?url=' + url + '&text=' + txt + '" target="_blank" rel="noopener">Telegram</a>';
-        document.querySelector(".post-actions").after(menu);
+    // Partage : image + texte + lien
+    document.querySelector(".act.share").addEventListener("click", async (ev) => {
+      const btn = ev.currentTarget;
+      const label = btn.querySelector("span");
+      const avant = label ? label.textContent : "";
+      if (label) label.textContent = "Préparation…";
+      btn.disabled = true;
+      let r = "telecharge";
+      try { r = await window.NiboImage.partager(p, location.href, "carre"); }
+      catch (e) { r = "telecharge"; }
+      if (r === "telecharge") {
+        let menu = document.querySelector(".share-menu");
+        if (!menu) {
+          menu = document.createElement("div"); menu.className = "share-menu";
+          const txt = encodeURIComponent(p.texte + (p.source ? " (Source : " + p.source + ")" : "") + " — via Nibo News");
+          const url = encodeURIComponent(location.href);
+          menu.innerHTML =
+            '<a class="share-btn share-wa" href="https://wa.me/?text=' + txt + '%20' + url + '" target="_blank" rel="noopener">WhatsApp</a>'
+            + '<a class="share-btn share-fb" href="https://www.facebook.com/sharer/sharer.php?u=' + url + '" target="_blank" rel="noopener">Facebook</a>'
+            + '<a class="share-btn share-x" href="https://twitter.com/intent/tweet?text=' + txt + '&url=' + url + '" target="_blank" rel="noopener">X</a>'
+            + '<a class="share-btn share-tg" href="https://t.me/share/url?url=' + url + '&text=' + txt + '" target="_blank" rel="noopener">Telegram</a>'
+            + '<span class="share-note">L\'image a été téléchargée : joins-la à ton message.</span>';
+          document.querySelector(".post-actions").after(menu);
+        }
+        menu.classList.add("open");
       }
-      menu.classList.toggle("open");
+      setTimeout(() => { if (label) label.textContent = avant; btn.disabled = false; }, 2200);
     });
 
     // Téléchargement image
