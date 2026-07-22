@@ -163,3 +163,22 @@ header{position:sticky;top:0;z-index:100;background:rgba(26,26,31,.85);
 }
 
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ============================================================
+   Newsletter
+   ============================================================ */
+.newsletter{max-width:var(--wrap);margin:0 auto 80px;padding:0 20px}
+.nl-inner{background:linear-gradient(150deg, color-mix(in srgb, var(--pourpre) 22%, var(--gris-2)), var(--gris-2));
+  border:1px solid var(--gris-line);border-radius:var(--r-lg);padding:34px 28px;text-align:center}
+.nl-inner h2{font-family:var(--serif);font-size:1.6rem;color:var(--blanc);margin-bottom:8px}
+.nl-inner p{color:var(--texte-doux);margin-bottom:20px;font-size:.95rem}
+.nl-form{display:flex;gap:10px;max-width:420px;margin:0 auto;flex-wrap:wrap}
+.nl-form input{flex:1;min-width:200px;background:var(--gris);border:1px solid var(--gris-3);border-radius:11px;
+  padding:12px 15px;font-family:inherit;font-size:.95rem;color:var(--texte)}
+.nl-form input:focus{outline:none;border-color:var(--pourpre)}
+.nl-form button{background:var(--pourpre);color:#fff;border:0;font-family:inherit;font-weight:600;
+  font-size:.92rem;padding:12px 24px;border-radius:11px;cursor:pointer;transition:background .2s}
+.nl-form button:hover{background:var(--pourpre-d)}
+.nl-msg{margin-top:14px;font-size:.9rem;min-height:20px}
+.nl-msg.ok{color:#4ade80}
+.nl-msg.err{color:#f87171}

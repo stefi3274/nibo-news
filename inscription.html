@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inscription · Nibo News</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .auth{max-width:400px;margin:60px auto;background:var(--gris-2);border:1px solid var(--gris-line);
+    border-radius:var(--r);padding:34px;text-align:left}
+  .auth h1{font-family:var(--serif);font-size:1.7rem;color:var(--blanc);margin-bottom:6px}
+  .auth .sub{color:var(--texte-doux);font-size:.92rem;margin-bottom:24px}
+  .field{margin-bottom:16px}
+  .field label{display:block;font-size:.82rem;font-weight:600;margin-bottom:6px;color:var(--texte)}
+  .field input{width:100%;background:var(--gris);border:1px solid var(--gris-3);border-radius:10px;
+    padding:12px 14px;font-family:inherit;font-size:1rem;color:var(--texte)}
+  .field input:focus{outline:none;border-color:var(--pourpre)}
+  .btn-p{background:var(--pourpre);color:#fff;border:0;font-family:inherit;font-weight:600;font-size:.95rem;
+    padding:12px;border-radius:11px;cursor:pointer;width:100%}
+  .btn-p:hover{background:var(--pourpre-d)}
+  .lien-bas{text-align:center;margin-top:18px;font-size:.9rem;color:var(--texte-doux)}
+  .lien-bas a{color:var(--pourpre-c);text-decoration:none;font-weight:600}
+  .msg{display:none;padding:11px 14px;border-radius:10px;font-size:.9rem;margin-bottom:14px}
+  .msg.on{display:block}
+  .msg.ok{background:rgba(39,174,96,.15);color:#4ade80}
+  .msg.err{background:rgba(192,57,43,.15);color:#f87171}
+</style>
+</head>
+<body>
+<header><div class="nav">
+  <a href="index.html" class="logo"><span class="logo-mark">N</span><span class="logo-txt">Nibo<b>News</b></span></a>
+</div></header>
+<div class="auth">
+  <h1>Créer un compte</h1>
+  <p class="sub">Rejoins Nibo News pour réagir et commenter.</p>
+  <form id="signupForm">
+    <div class="msg" id="msg"></div>
+    <div class="field"><label>Ton nom (affiché avec tes commentaires)</label><input type="text" id="nom" required></div>
+    <div class="field"><label>Email</label><input type="email" id="email" required autocomplete="email"></div>
+    <div class="field"><label>Mot de passe</label><input type="password" id="pass" required autocomplete="new-password"></div>
+    <button type="submit" class="btn-p">Créer mon compte</button>
+  </form>
+  <p class="lien-bas">Déjà un compte ? <a href="connexion.html">Se connecter</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/passeye.js"></script>
+</body>
+</html>

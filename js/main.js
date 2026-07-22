@@ -20,7 +20,7 @@
     const bgStyle = p.image_url
       ? ' style="background-image:linear-gradient(160deg,rgba(20,20,26,.82),rgba(20,20,26,.92)),url(' + esc(p.image_url) + ');background-size:cover;background-position:center"'
       : '';
-    return '<article class="post r-' + p.rubrique + '" data-id="' + p.id + '">'
+    return '<article class="post r-' + p.rubrique + '" data-id="' + p.id + '" data-date="' + (p.created_at||"") + '">'
       + '<div class="post-visuel' + court + '"' + bgStyle + '>'
       + '<div class="post-head"><span class="post-rub">' + esc(RUBS[p.rubrique]||p.rubrique) + '</span>'
       + '<span class="post-nino">Nibo<b>News</b></span></div>'
@@ -121,8 +121,20 @@
           menu.innerHTML = '<button class="dl-opt" data-format="carre">Format carré (1:1)</button>'
             + '<button class="dl-opt" data-format="story">Format story (9:16)</button>';
           btn.closest(".post-actions").after(menu);
-          menu.querySelectorAll(".dl-opt").forEach(opt => opt.addEventListener("click", () =>
-            alert("La génération d'image (" + opt.getAttribute("data-format") + ") arrive à l'étape suivante.")));
+          menu.querySelectorAll(".dl-opt").forEach(opt => opt.addEventListener("click", async () => {
+            const fmt = opt.getAttribute("data-format");
+            const avant = opt.textContent;
+            opt.textContent = "Génération…"; opt.disabled = true;
+            try {
+              const donnees = postDepuisCarte(post);
+              await window.NiboImage.generer(donnees, fmt);
+              opt.textContent = "✓ Téléchargé";
+              setTimeout(() => { opt.textContent = avant; opt.disabled = false; }, 1800);
+            } catch (e) {
+              opt.textContent = "Échec, réessaie";
+              setTimeout(() => { opt.textContent = avant; opt.disabled = false; }, 1800);
+            }
+          }));
         }
         menu.classList.toggle("open");
         const sh = post.querySelector(".share-menu"); if (sh) sh.classList.remove("open");
@@ -130,6 +142,52 @@
     });
   }
 
+  // Reconstitue les données d'un post depuis sa carte affichée
+  function postDepuisCarte(el) {
+    let rubrique = "politique";
+    for (const c of el.classList) if (c.startsWith("r-")) rubrique = c.slice(2);
+    const visuel = el.querySelector(".post-visuel");
+    let image_url = null;
+    if (visuel && visuel.style.backgroundImage) {
+      const m = visuel.style.backgroundImage.match(/url\(["']?([^"')]+)["']?\)/);
+      if (m) image_url = m[1];
+    }
+    return {
+      rubrique,
+      texte: el.querySelector(".post-texte") ? el.querySelector(".post-texte").textContent : "",
+      image_url,
+      created_at: el.getAttribute("data-date") || new Date().toISOString()
+    };
+  }
+
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", charger);
   else charger();
+})();
+
+/* Newsletter — collecte des emails */
+(function () {
+  const btn = document.getElementById("nlBtn");
+  if (!btn) return;
+  btn.addEventListener("click", async () => {
+    const inp = document.getElementById("nlEmail");
+    const msg = document.getElementById("nlMsg");
+    const email = (inp.value||"").trim();
+    if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+      msg.textContent = "Entre une adresse email valide."; msg.className = "nl-msg err"; return;
+    }
+    if (typeof DB === "undefined" || !DB) {
+      msg.textContent = "Service indisponible pour le moment."; msg.className = "nl-msg err"; return;
+    }
+    msg.textContent = "Inscription…"; msg.className = "nl-msg";
+    const ent = await entrepriseId();
+    const { error } = await DB.from("abonnes").insert({ entreprise_id: ent, email: email });
+    if (error) {
+      msg.textContent = error.message.includes("duplicate") || error.code === "23505"
+        ? "Tu es déjà abonné, merci !" : "Erreur, réessaie plus tard.";
+      msg.className = "nl-msg " + (error.code === "23505" ? "ok" : "err");
+      return;
+    }
+    msg.textContent = "Merci ! Tu es abonné à Nibo News."; msg.className = "nl-msg ok";
+    inp.value = "";
+  });
 })();

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Post · Nibo News</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .retour{display:inline-flex;align-items:center;gap:8px;color:var(--texte-doux);text-decoration:none;
+    font-size:.9rem;font-weight:600;margin-bottom:18px;transition:color .2s}
+  .retour:hover{color:var(--pourpre-c)}
+  .comm-zone{max-width:var(--wrap);margin:0 auto;padding:0 20px 80px}
+  .comm-titre{font-family:var(--serif);font-size:1.3rem;color:var(--blanc);margin:28px 0 16px}
+  .comm-box{background:var(--gris-2);border:1px solid var(--gris-line);border-radius:var(--r);padding:18px;margin-bottom:22px}
+  .comm-box textarea{width:100%;background:var(--gris);border:1px solid var(--gris-3);border-radius:10px;
+    padding:12px 14px;font-family:inherit;font-size:1rem;color:var(--texte);min-height:80px;resize:vertical}
+  .comm-box textarea:focus{outline:none;border-color:var(--pourpre)}
+  .comm-box .row{display:flex;justify-content:space-between;align-items:center;margin-top:12px;gap:10px;flex-wrap:wrap}
+  .comm-box .who{font-size:.85rem;color:var(--texte-doux)}
+  .btn-p{background:var(--pourpre);color:#fff;border:0;font-family:inherit;font-weight:600;font-size:.9rem;
+    padding:10px 20px;border-radius:10px;cursor:pointer}
+  .btn-p:hover{background:var(--pourpre-d)}
+  .connect-invite{background:var(--gris-2);border:1px dashed var(--gris-3);border-radius:var(--r);
+    padding:24px;text-align:center;margin-bottom:22px}
+  .connect-invite p{color:var(--texte-doux);margin-bottom:14px}
+  .comm{background:var(--gris-2);border:1px solid var(--gris-line);border-radius:14px;padding:16px 18px;margin-bottom:12px}
+  .comm-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .comm-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--pourpre-c),var(--pourpre-d));
+    display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:.9rem;flex:0 0 auto}
+  .comm-auteur{font-weight:600;color:var(--texte)}
+  .comm-date{font-size:.8rem;color:var(--texte-faible);margin-left:auto}
+  .comm-texte{color:var(--texte);line-height:1.55}
+  .comm-vide{text-align:center;color:var(--texte-faible);padding:34px;font-style:italic}
+  .msg{display:none;padding:11px 14px;border-radius:10px;font-size:.9rem;margin-bottom:12px}
+  .msg.on{display:block}
+  .msg.ok{background:rgba(39,174,96,.15);color:#4ade80}
+  .msg.err{background:rgba(192,57,43,.15);color:#f87171}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a href="index.html" class="logo"><span class="logo-mark">N</span><span class="logo-txt">Nibo<b>News</b></span></a>
+    <div class="nav-actions"><a href="connexion.html" class="btn-connexion" id="navAuth">Se connecter</a></div>
+  </div>
+</header>
+
+<main class="fil" id="postZone">
+  <a href="index.html" class="retour">← Retour au fil</a>
+  <p style="color:var(--texte-doux)">Chargement…</p>
+</main>
+
+<section class="comm-zone">
+  <h2 class="comm-titre">Commentaires <span id="commNb" style="color:var(--texte-faible);font-size:1rem"></span></h2>
+  <div class="msg" id="commMsg"></div>
+  <div id="commForm"></div>
+  <div id="commListe"><p class="comm-vide">Chargement…</p></div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/image.js"></script>
+<script src="js/post.js"></script>
+</body>
+</html>
