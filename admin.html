@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin · Nibo News</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .adm-wrap{max-width:680px;margin:0 auto;padding:30px 20px 90px}
+  .login{max-width:400px;margin:60px auto;background:var(--gris-2);border:1px solid var(--gris-line);border-radius:var(--r);padding:32px}
+  .login h2{font-family:var(--serif);font-size:1.5rem;margin-bottom:6px;color:var(--blanc)}
+  .login .sub{color:var(--texte-doux);font-size:.9rem;margin-bottom:24px}
+  .field{margin-bottom:16px}
+  .field label{display:block;font-size:.82rem;font-weight:600;margin-bottom:6px;color:var(--texte)}
+  .field input,.field select,.field textarea{width:100%;background:var(--gris);border:1px solid var(--gris-3);
+    border-radius:10px;padding:12px 14px;font-family:inherit;font-size:1rem;color:var(--texte)}
+  .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--pourpre)}
+  .field textarea{min-height:90px;resize:vertical;line-height:1.5}
+  .field .hint{font-size:.8rem;color:var(--texte-faible);margin-top:5px}
+  .btn-p{background:var(--pourpre);color:#fff;border:0;font-family:inherit;font-weight:600;font-size:.95rem;
+    padding:12px 22px;border-radius:11px;cursor:pointer;transition:background .2s}
+  .btn-p:hover{background:var(--pourpre-d)}
+  .btn-g{background:none;border:1px solid var(--gris-3);color:var(--texte);font-family:inherit;font-weight:600;
+    padding:10px 18px;border-radius:10px;cursor:pointer}
+  .adm-tabs{display:flex;gap:8px;margin-bottom:24px}
+  .adm-tab{background:none;border:1px solid var(--gris-3);color:var(--texte-doux);font-family:var(--serif);
+    font-weight:600;font-size:1.05rem;padding:9px 18px;border-radius:10px;cursor:pointer;transition:all .2s}
+  .adm-tab.on{background:var(--pourpre);border-color:var(--pourpre);color:#fff}
+  .adm-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
+  .adm-head h1{font-family:var(--serif);font-size:1.6rem;color:var(--blanc)}
+  .rub-select{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+  .rub-select label{flex:0 0 auto;cursor:pointer}
+  .rub-select input{display:none}
+  .rub-select .rs-chip{display:inline-block;padding:8px 15px;border-radius:20px;border:1.5px solid var(--gris-3);
+    font-size:.85rem;font-weight:600;color:var(--texte-doux);transition:all .2s}
+  .rub-select input:checked + .rs-chip{background:var(--c);border-color:var(--c);color:#fff}
+  .msg{display:none;padding:11px 14px;border-radius:10px;font-size:.9rem;margin-bottom:14px}
+  .msg.on{display:block}
+  .msg.ok{background:rgba(39,174,96,.15);color:#4ade80}
+  .msg.err{background:rgba(192,57,43,.15);color:#f87171}
+  .liste-item{background:var(--gris-2);border:1px solid var(--gris-line);border-left-width:4px;border-radius:12px;
+    padding:16px;margin-bottom:12px}
+  .li-rub{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+  .li-texte{color:var(--texte);margin-bottom:10px;line-height:1.5}
+  .li-meta{font-size:.8rem;color:var(--texte-faible);margin-bottom:10px}
+  .li-act{display:flex;gap:8px;flex-wrap:wrap}
+  .li-act button{font-family:inherit;font-weight:600;font-size:.82rem;padding:8px 14px;border-radius:8px;
+    cursor:pointer;border:1px solid var(--gris-3);background:none;color:var(--texte)}
+  .li-act .ok{border-color:#27ae60;color:#4ade80}
+  .li-act .no{border-color:#c0392b;color:#f87171}
+  .empty{text-align:center;color:var(--texte-faible);padding:40px;font-style:italic}
+  .filedrop{border:2px dashed var(--gris-3);border-radius:10px;padding:16px;text-align:center;
+    color:var(--texte-doux);cursor:pointer;font-size:.9rem}
+  .filedrop:hover{border-color:var(--pourpre)}
+  .filedrop.has{border-color:var(--pourpre);color:var(--pourpre-c)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a href="index.html" class="logo"><span class="logo-mark">N</span><span class="logo-txt">Nibo<b>News</b></span></a>
+    <a href="index.html" class="btn-connexion">← Retour au site</a>
+  </div>
+</header>
+
+<div class="adm-wrap">
+
+  <div id="setupNote" class="login" style="display:none">
+    <h2>Configuration requise</h2>
+    <p class="sub">La connexion Supabase n'est pas disponible.</p>
+  </div>
+
+  <!-- Connexion -->
+  <div id="loginCard" class="login" style="display:none">
+    <h2>Espace admin</h2>
+    <p class="sub">Gère les posts et les contributions de Nibo News.</p>
+    <form id="loginForm">
+      <div class="msg" id="loginMsg"></div>
+      <div class="field"><label>Email</label><input type="email" id="admEmail" required></div>
+      <div class="field"><label>Mot de passe</label><input type="password" id="admPass" required></div>
+      <button type="submit" class="btn-p" style="width:100%">Se connecter</button>
+    </form>
+  </div>
+
+  <!-- Panneau -->
+  <div id="panel" style="display:none">
+    <div class="adm-head">
+      <div class="adm-tabs">
+        <button class="adm-tab on" data-tab="creer">Créer un post</button>
+        <button class="adm-tab" data-tab="posts">Mes posts</button>
+        <button class="adm-tab" data-tab="contrib">Contributions</button>
+      </div>
+      <button class="btn-g" id="logoutBtn">Déconnexion</button>
+    </div>
+    <div class="msg" id="admMsg"></div>
+
+    <!-- Créer un post -->
+    <div id="tab-creer">
+      <div class="field">
+        <label>Rubrique</label>
+        <div class="rub-select" id="rubSelect">
+          <label class="r-politique"><input type="radio" name="rub" value="politique" checked><span class="rs-chip">Politique</span></label>
+          <label class="r-sport"><input type="radio" name="rub" value="sport"><span class="rs-chip">Sport</span></label>
+          <label class="r-social"><input type="radio" name="rub" value="social"><span class="rs-chip">Social</span></label>
+          <label class="r-economie"><input type="radio" name="rub" value="economie"><span class="rs-chip">Économie</span></label>
+          <label class="r-international"><input type="radio" name="rub" value="international"><span class="rs-chip">International</span></label>
+          <label class="r-potins"><input type="radio" name="rub" value="potins"><span class="rs-chip">Potins</span></label>
+        </div>
+      </div>
+      <div class="field">
+        <label>Texte du post</label>
+        <textarea id="postTexte" placeholder="Court, clair, percutant. Comme un tweet."></textarea>
+        <div class="hint"><span id="compteur">0</span> caractères · vise 100-220 pour un bon visuel</div>
+      </div>
+      <div class="field">
+        <label>Image de fond (facultatif)</label>
+        <div class="filedrop" id="imgDrop"><span id="imgTxt">Clique pour ajouter une image de fond</span></div>
+        <input type="file" id="imgInput" accept="image/*" style="display:none">
+        <div class="hint">Le texte s'affichera par-dessus avec un voile sombre pour rester lisible.</div>
+      </div>
+      <div class="field">
+        <label>Auteur / crédit (facultatif)</label>
+        <input type="text" id="postAuteur" placeholder="Nibo News, ou nom du contributeur">
+      </div>
+      <button class="btn-p" id="publierBtn">Publier le post</button>
+    </div>
+
+    <!-- Mes posts -->
+    <div id="tab-posts" style="display:none">
+      <div id="postsList"><p class="empty">Chargement…</p></div>
+    </div>
+
+    <!-- Contributions -->
+    <div id="tab-contrib" style="display:none">
+      <div id="contribList"><p class="empty">Chargement…</p></div>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/admin.js"></script>
+<script src="js/passeye.js"></script>
+</body>
+</html>
