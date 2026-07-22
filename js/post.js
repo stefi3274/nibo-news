@@ -41,6 +41,7 @@
       + '<span class="post-nino">Nibo<b>News</b></span></div>'
       + '<p class="post-texte">' + esc(p.texte) + '</p>'
       + '<div class="post-foot"><span class="post-date">' + dateFr(p.created_at) + '</span>'
+      + (p.source ? '<span class="pf-dot"></span><span class="post-source">Source : ' + esc(p.source) + '</span>' : '')
       + '<span class="post-watermark">Nibo<b>News</b></span></div></div>'
       + '<div class="post-actions">'
       + '<button class="act like" id="likeBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg><span class="act-count">' + (p.likes||0) + '</span></button>'

@@ -192,3 +192,6 @@ header{position:sticky;top:0;z-index:100;background:rgba(26,26,31,.85);
 .fv-icone svg{width:30px;height:30px;color:#fff}
 .fil-vide h2{font-family:var(--serif);font-size:1.5rem;color:var(--blanc);margin-bottom:10px}
 .fil-vide p{color:var(--texte-doux);max-width:360px;margin:0 auto;font-size:.95rem}
+
+/* Source du post (crédibilité du relais) */
+.post-source{font-size:.82rem;color:var(--texte-doux);font-style:italic}

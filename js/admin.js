@@ -78,11 +78,12 @@
     const { error } = await DB.from("posts").insert({
       entreprise_id: ent, rubrique: rub, texte: texte,
       image_url, image_chemin,
-      auteur: $("postAuteur").value.trim() || "Nibo News", statut: "publie"
+      auteur: $("postAuteur").value.trim() || "Nibo News",
+      source: $("postSource").value.trim() || null, statut: "publie"
     });
     if (error) { status("Erreur : " + error.message,"err"); return; }
     status("Post publié !","ok");
-    $("postTexte").value=""; $("compteur").textContent="0"; $("postAuteur").value="";
+    $("postTexte").value=""; $("compteur").textContent="0"; $("postAuteur").value=""; $("postSource").value="";
     imgFile=null; $("imgTxt").textContent="Clique pour ajouter une image de fond"; drop.classList.remove("has");
   });
 
@@ -95,7 +96,7 @@
       '<div class="liste-item r-' + p.rubrique + '" style="border-left-color:var(--' + p.rubrique + ')">'
       + '<div class="li-rub" style="color:var(--' + p.rubrique + ')">' + esc(RUBS[p.rubrique]||p.rubrique) + '</div>'
       + '<div class="li-texte">' + esc(p.texte) + '</div>'
-      + '<div class="li-meta">' + dateFr(p.created_at) + ' · ♥ ' + p.likes + (p.image_url?' · image':'') + '</div>'
+      + '<div class="li-meta">' + dateFr(p.created_at) + ' · ♥ ' + p.likes + (p.image_url?' · image':'') + (p.source?' · source : '+esc(p.source):'') + '</div>'
       + '<div class="li-act"><button class="no" data-del="' + p.id + '">Supprimer</button></div>'
       + '</div>'
     ).join("");
@@ -133,7 +134,7 @@
     const { error } = await DB.from("posts").insert({
       entreprise_id: ent, rubrique: c.rubrique||"social", texte: c.texte,
       image_url: c.image_url, image_chemin: c.image_chemin,
-      auteur: c.auteur, statut: "publie"
+      auteur: c.auteur, source: c.source || null, statut: "publie"
     });
     if (error) { status("Erreur : " + error.message,"err"); return; }
     await DB.from("nibo_contributions").update({ statut:"valide" }).eq("id",id);

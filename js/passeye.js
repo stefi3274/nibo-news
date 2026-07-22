@@ -27,7 +27,12 @@
     });
   }
 
-  document.addEventListener("DOMContentLoaded", () => {
+  function lancer() {
     document.querySelectorAll('input[type="password"]').forEach(equiper);
-  });
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", lancer);
+  else lancer();
+  // Re-scanner si des champs apparaissent plus tard (formulaires dynamiques)
+  setTimeout(lancer, 400);
+  setTimeout(lancer, 1200);
 })();

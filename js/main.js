@@ -26,6 +26,7 @@
       + '<span class="post-nino">Nibo<b>News</b></span></div>'
       + '<p class="post-texte">' + esc(p.texte) + '</p>'
       + '<div class="post-foot"><span class="post-date">' + dateFr(p.created_at) + '</span>'
+      + (p.source ? '<span class="pf-dot"></span><span class="post-source">Source : ' + esc(p.source) + '</span>' : '')
       + '<span class="post-watermark">Nibo<b>News</b></span></div>'
       + '</div>'
       + '<div class="post-actions">'
@@ -172,10 +173,12 @@
       const m = visuel.style.backgroundImage.match(/url\(["']?([^"')]+)["']?\)/);
       if (m) image_url = m[1];
     }
+    const srcEl = el.querySelector(".post-source");
     return {
       rubrique,
       texte: el.querySelector(".post-texte") ? el.querySelector(".post-texte").textContent : "",
       image_url,
+      source: srcEl ? srcEl.textContent.replace(/^Source\s*:\s*/,"") : null,
       created_at: el.getAttribute("data-date") || new Date().toISOString()
     };
   }

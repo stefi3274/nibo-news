@@ -149,7 +149,7 @@
     ctx.fillStyle = BLANC;
     lns.forEach(l => { ctx.fillText(l, marge, y); y += interligne; });
 
-    // --- Pied : filet + date + filigrane ---
+    // --- Pied : filet + date + source + filigrane ---
     const yPied = F.h - (story?150:110);
     ctx.strokeStyle = melange(coul, 0.45);
     ctx.lineWidth = 2;
@@ -162,7 +162,15 @@
     ctx.fillStyle = DOUX;
     ctx.textAlign = "left";
     const d = post.created_at ? new Date(post.created_at) : new Date();
-    ctx.fillText(d.toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"}), marge, yPied);
+    const dateTxt = d.toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
+    ctx.fillText(dateTxt, marge, yPied);
+
+    // Source juste sous la date (crédibilité du relais)
+    if (post.source) {
+      ctx.font = "500 " + (story?26:24) + "px Inter, system-ui, sans-serif";
+      ctx.fillStyle = melange(coul, 0.75);
+      ctx.fillText("Source : " + post.source, marge, yPied + (story?40:36));
+    }
 
     ctx.textAlign = "right";
     ctx.font = "600 " + (story?30:28) + "px Georgia, serif";
