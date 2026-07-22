@@ -71,12 +71,12 @@ header{position:sticky;top:0;z-index:100;background:rgba(26,26,31,.85);
 /* ============================================================
    Filtres de rubriques
    ============================================================ */
-.rubriques{position:sticky;top:67px;z-index:90;background:rgba(26,26,31,.8);
-  backdrop-filter:blur(14px);border-bottom:1px solid var(--gris-line);overflow-x:auto;
-  -ms-overflow-style:none;scrollbar-width:none}
-.rubriques::-webkit-scrollbar{display:none}
-.rubriques-inner{max-width:var(--wrap);margin:0 auto;display:flex;gap:8px;padding:12px 20px}
-.rub-chip{flex:0 0 auto;background:none;border:1.5px solid var(--gris-3);color:var(--texte-doux);
+.rubriques{position:sticky;top:67px;z-index:90;background:rgba(26,26,31,.85);
+  backdrop-filter:blur(14px);border-bottom:1px solid var(--gris-line)}
+/* Toutes les rubriques visibles : elles passent à la ligne au lieu de défiler */
+.rubriques-inner{max-width:var(--wrap);margin:0 auto;display:flex;flex-wrap:wrap;
+  gap:7px;padding:12px 20px;justify-content:center}
+.rub-chip{background:none;border:1.5px solid var(--gris-3);color:var(--texte-doux);
   font-family:inherit;font-weight:600;font-size:.85rem;padding:7px 15px;border-radius:20px;
   cursor:pointer;transition:all .2s;white-space:nowrap}
 .rub-chip:hover{border-color:var(--c,var(--pourpre));color:var(--blanc)}
@@ -279,3 +279,12 @@ footer{border-top:1px solid var(--gris-line);background:var(--gris-2);margin-top
   padding:9px 12px;transition:color .2s}
 .nav-lien:hover{color:var(--pourpre-c)}
 @media (max-width:420px){.nav-lien{display:none}}
+
+/* Rubriques : ajustement sur petits écrans (tout reste visible) */
+@media (max-width:430px){
+  .rubriques-inner{gap:6px;padding:11px 14px}
+  .rub-chip{font-size:.79rem;padding:6px 12px}
+}
+@media (max-width:340px){
+  .rub-chip{font-size:.75rem;padding:6px 10px}
+}
