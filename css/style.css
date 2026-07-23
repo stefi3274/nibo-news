@@ -288,3 +288,19 @@ footer{border-top:1px solid var(--gris-line);background:var(--gris-2);margin-top
 @media (max-width:340px){
   .rub-chip{font-size:.75rem;padding:6px 10px}
 }
+
+/* Sélecteur de langue (admin) */
+.lang-chip{min-width:96px;text-align:center}
+#langSelect input:checked + .rs-chip{background:var(--pourpre);border-color:var(--pourpre);color:#fff}
+
+/* Marqueur de langue sur les posts */
+.post-langue{font-size:.7rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  padding:2px 8px;border-radius:20px;background:var(--pourpre-glow);color:var(--pourpre-c);margin-left:8px}
+
+/* Filtre de langue */
+.langues-inner{max-width:var(--wrap);margin:0 auto;display:flex;gap:6px;padding:0 20px 11px;
+  justify-content:center;flex-wrap:wrap}
+.lang-filtre{background:none;border:0;color:var(--texte-faible);font-family:inherit;
+  font-weight:600;font-size:.8rem;padding:5px 12px;border-radius:8px;cursor:pointer;transition:all .2s}
+.lang-filtre:hover{color:var(--texte)}
+.lang-filtre.on{background:var(--pourpre-glow);color:var(--pourpre-c)}

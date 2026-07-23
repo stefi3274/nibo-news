@@ -20,9 +20,10 @@
     const bgStyle = p.image_url
       ? ' style="background-image:linear-gradient(160deg,rgba(20,20,26,.82),rgba(20,20,26,.92)),url(' + esc(p.image_url) + ');background-size:cover;background-position:center"'
       : '';
-    return '<article class="post r-' + p.rubrique + '" data-id="' + p.id + '" data-date="' + (p.created_at||"") + '">'
+    return '<article class="post r-' + p.rubrique + '" data-id="' + p.id + '" data-date="' + (p.created_at||"") + '" data-langue="' + (p.langue||"fr") + '">'
       + '<div class="post-visuel' + court + '"' + bgStyle + '>'
       + '<div class="post-head"><span class="post-rub">' + esc(RUBS[p.rubrique]||p.rubrique) + '</span>'
+      + (p.langue === 'ht' ? '<span class="post-langue">Kreyòl</span>' : '')
       + '<span class="post-nino">Nibo<b>News</b></span></div>'
       + '<p class="post-texte">' + esc(p.texte) + '</p>'
       + '<div class="post-foot"><span class="post-date">' + dateFr(p.created_at) + '</span>'
@@ -53,32 +54,46 @@
     brancher();
   }
 
-  // Filtres de rubriques
+  // Filtres de rubriques et de langue (combinés)
+  let filtreRub = "tous", filtreLang = "tous";
+
+  function appliquerFiltres() {
+    const posts = document.querySelectorAll(".post");
+    let visibles = 0;
+    posts.forEach(p => {
+      const okRub = (filtreRub === "tous" || p.classList.contains("r-" + filtreRub));
+      const lang = p.getAttribute("data-langue") || "fr";
+      const okLang = (filtreLang === "tous" || lang === filtreLang);
+      const ok = okRub && okLang;
+      p.style.display = ok ? "" : "none";
+      if (ok) visibles++;
+    });
+    let vide = document.getElementById("rubVide");
+    if (posts.length && visibles === 0) {
+      if (!vide) {
+        vide = document.createElement("div");
+        vide.id = "rubVide"; vide.className = "fil-vide";
+        fil.appendChild(vide);
+      }
+      vide.innerHTML = '<h2>Rien à afficher</h2><p>Aucune publication ne correspond à ces filtres pour le moment.</p>';
+      vide.style.display = "";
+    } else if (vide) {
+      vide.style.display = "none";
+    }
+  }
+
   function initFiltres() {
     const chips = document.querySelectorAll(".rub-chip");
     chips.forEach(chip => chip.addEventListener("click", () => {
       chips.forEach(c => c.classList.toggle("on", c === chip));
-      const rub = chip.getAttribute("data-rub");
-      const posts = document.querySelectorAll(".post");
-      let visibles = 0;
-      posts.forEach(p => {
-        const ok = (rub === "tous" || p.classList.contains("r-" + rub));
-        p.style.display = ok ? "" : "none";
-        if (ok) visibles++;
-      });
-      // Message si la rubrique choisie n'a aucun post
-      let vide = document.getElementById("rubVide");
-      if (posts.length && visibles === 0) {
-        if (!vide) {
-          vide = document.createElement("div");
-          vide.id = "rubVide"; vide.className = "fil-vide";
-          vide.innerHTML = '<h2>Rien dans cette rubrique</h2><p>Aucune actualité publiée ici pour le moment.</p>';
-          fil.appendChild(vide);
-        }
-        vide.style.display = "";
-      } else if (vide) {
-        vide.style.display = "none";
-      }
+      filtreRub = chip.getAttribute("data-rub");
+      appliquerFiltres();
+    }));
+    const langs = document.querySelectorAll(".lang-filtre");
+    langs.forEach(l => l.addEventListener("click", () => {
+      langs.forEach(x => x.classList.toggle("on", x === l));
+      filtreLang = l.getAttribute("data-lang");
+      appliquerFiltres();
     }));
   }
 

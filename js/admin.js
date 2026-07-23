@@ -18,8 +18,14 @@
       ["creer","posts","contrib"].forEach(k => {
         const el = $("tab-" + k); if (el) el.style.display = (t === k) ? "block" : "none";
       });
-      if (t === "posts" && window.DB) chargerPosts();
-      if (t === "contrib" && window.DB) chargerContrib();
+      if (t === "posts") {
+        if (window.DB) chargerPosts();
+        else $("postsList").innerHTML = "<p class='empty'>Connexion indisponible. Recharge la page.</p>";
+      }
+      if (t === "contrib") {
+        if (window.DB) chargerContrib();
+        else $("contribList").innerHTML = "<p class='empty'>Connexion indisponible. Recharge la page.</p>";
+      }
     });
   });
 
@@ -79,7 +85,9 @@
       entreprise_id: ent, rubrique: rub, texte: texte,
       image_url, image_chemin,
       auteur: $("postAuteur").value.trim() || "Nibo News",
-      source: $("postSource").value.trim() || null, statut: "publie"
+      source: $("postSource").value.trim() || null,
+      langue: (document.querySelector('input[name="lang"]:checked')||{}).value || "fr",
+      statut: "publie"
     });
     if (error) { status("Erreur : " + error.message,"err"); return; }
     status("Post publié !","ok");
@@ -87,45 +95,98 @@
     imgFile=null; $("imgTxt").textContent="Clique pour ajouter une image de fond"; drop.classList.remove("has");
   });
 
+  // Empêche un chargement de rester bloqué indéfiniment
+  function avecDelai(promesse, ms, messageErreur) {
+    return Promise.race([
+      promesse,
+      new Promise((_, rej) => setTimeout(() => rej(new Error(messageErreur || "Délai dépassé")), ms))
+    ]);
+  }
+
   // Mes posts
   async function chargerPosts() {
-    const box = $("postsList"); box.innerHTML = "<p class='empty'>Chargement…</p>";
-    const { data, error } = await DB.from("posts").select("*").order("created_at",{ascending:false});
-    if (error || !data.length) { box.innerHTML = "<p class='empty'>Aucun post pour l'instant.</p>"; return; }
-    box.innerHTML = data.map(p =>
-      '<div class="liste-item r-' + p.rubrique + '" style="border-left-color:var(--' + p.rubrique + ')">'
-      + '<div class="li-rub" style="color:var(--' + p.rubrique + ')">' + esc(RUBS[p.rubrique]||p.rubrique) + '</div>'
-      + '<div class="li-texte">' + esc(p.texte) + '</div>'
-      + '<div class="li-meta">' + dateFr(p.created_at) + ' · ♥ ' + p.likes + (p.image_url?' · image':'') + (p.source?' · source : '+esc(p.source):'') + '</div>'
-      + '<div class="li-act"><button class="no" data-del="' + p.id + '">Supprimer</button></div>'
-      + '</div>'
-    ).join("");
-    box.querySelectorAll("[data-del]").forEach(b => b.onclick = () => supprimerPost(b.getAttribute("data-del")));
+    const box = $("postsList");
+    box.innerHTML = "<p class='empty'>Chargement…</p>";
+    try {
+      const ent = await avecDelai(entrepriseId(), 10000, "La connexion prend trop de temps.");
+      if (!ent) {
+        box.innerHTML = "<p class='empty'>Impossible de trouver l'entreprise Nibo. Vérifie que le SQL a bien été exécuté.</p>";
+        return;
+      }
+      const { data, error } = await avecDelai(
+        DB.from("posts").select("*").eq("entreprise_id", ent).order("created_at",{ascending:false}),
+        10000, "La connexion prend trop de temps.");
+
+      if (error) {
+        box.innerHTML = "<p class='empty' style='color:#f87171'>Erreur : " + esc(error.message)
+          + "<br><br>Si le message parle de permissions, ton compte n'est peut-être pas relié à Nibo News.</p>";
+        return;
+      }
+      if (!data || !data.length) {
+        box.innerHTML = "<p class='empty'>Aucun post pour l'instant. Crée ton premier post dans l'onglet « Créer un post ».</p>";
+        return;
+      }
+
+      box.innerHTML = data.map(p =>
+        '<div class="liste-item r-' + p.rubrique + '" style="border-left-color:var(--' + p.rubrique + ')">'
+        + '<div class="li-rub" style="color:var(--' + p.rubrique + ')">' + esc(RUBS[p.rubrique]||p.rubrique) + '</div>'
+        + '<div class="li-texte">' + esc(p.texte) + '</div>'
+        + '<div class="li-meta">' + dateFr(p.created_at) + ' · ♥ ' + (p.likes||0)
+        + (p.image_url?' · image':'') + (p.source?' · source : '+esc(p.source):'') + (p.langue==='ht'?' · <span style="color:var(--pourpre-c)">Kreyòl</span>':'') + '</div>'
+        + '<div class="li-act"><button class="no" data-del="' + p.id + '">Supprimer</button></div>'
+        + '</div>'
+      ).join("");
+      box.querySelectorAll("[data-del]").forEach(b => b.onclick = () => supprimerPost(b.getAttribute("data-del")));
+    } catch (e) {
+      box.innerHTML = "<p class='empty' style='color:#f87171'>Erreur de chargement : " + esc(String(e && e.message || e)) + "</p>";
+    }
   }
   async function supprimerPost(id) {
-    if (!confirm("Supprimer ce post ?")) return;
-    const { data:p } = await DB.from("posts").select("image_chemin").eq("id",id).maybeSingle();
-    if (p && p.image_chemin) await DB.storage.from(BUCKET).remove([p.image_chemin]);
-    await DB.from("posts").delete().eq("id",id);
-    status("Post supprimé.","ok"); chargerPosts();
+    if (!confirm("Supprimer ce post définitivement ?")) return;
+    try {
+      const { data:p } = await DB.from("posts").select("image_chemin").eq("id",id).maybeSingle();
+      if (p && p.image_chemin) await DB.storage.from(BUCKET).remove([p.image_chemin]);
+      const { error } = await DB.from("posts").delete().eq("id",id);
+      if (error) { status("Suppression impossible : " + error.message, "err"); return; }
+      status("Post supprimé.","ok");
+      chargerPosts();
+    } catch (e) {
+      status("Erreur : " + (e && e.message || e), "err");
+    }
   }
 
   // Contributions
   async function chargerContrib() {
-    const box = $("contribList"); box.innerHTML = "<p class='empty'>Chargement…</p>";
-    const { data, error } = await DB.from("nibo_contributions").select("*").eq("statut","a_verifier").order("created_at",{ascending:false});
-    if (error || !data.length) { box.innerHTML = "<p class='empty'>Aucune contribution à vérifier.</p>"; return; }
-    box.innerHTML = data.map(c =>
-      '<div class="liste-item r-' + (c.rubrique||'politique') + '" style="border-left-color:var(--' + (c.rubrique||'politique') + ')">'
-      + '<div class="li-rub" style="color:var(--' + (c.rubrique||'politique') + ')">' + esc(RUBS[c.rubrique]||c.rubrique||'—') + '</div>'
-      + '<div class="li-texte">' + esc(c.texte) + '</div>'
-      + '<div class="li-meta">Par ' + esc(c.auteur) + (c.contact?' · '+esc(c.contact):'') + ' · ' + dateFr(c.created_at) + '</div>'
-      + '<div class="li-act"><button class="ok" data-pub="' + c.id + '">Publier</button>'
-      + '<button class="no" data-rej="' + c.id + '">Rejeter</button></div>'
-      + '</div>'
-    ).join("");
-    box.querySelectorAll("[data-pub]").forEach(b => b.onclick = () => publierContrib(b.getAttribute("data-pub"), data));
-    box.querySelectorAll("[data-rej]").forEach(b => b.onclick = () => rejeterContrib(b.getAttribute("data-rej")));
+    const box = $("contribList");
+    box.innerHTML = "<p class='empty'>Chargement…</p>";
+    try {
+      const ent = await avecDelai(entrepriseId(), 10000, "La connexion prend trop de temps.");
+      if (!ent) { box.innerHTML = "<p class='empty'>Entreprise introuvable.</p>"; return; }
+      const { data, error } = await avecDelai(
+        DB.from("nibo_contributions").select("*")
+          .eq("entreprise_id", ent).eq("statut","a_verifier")
+          .order("created_at",{ascending:false}),
+        10000, "La connexion prend trop de temps.");
+      if (error) {
+        box.innerHTML = "<p class='empty' style='color:#f87171'>Erreur : " + esc(error.message) + "</p>";
+        return;
+      }
+      if (!data || !data.length) { box.innerHTML = "<p class='empty'>Aucune contribution à vérifier.</p>"; return; }
+      box.innerHTML = data.map(c =>
+        '<div class="liste-item r-' + (c.rubrique||'social') + '" style="border-left-color:var(--' + (c.rubrique||'social') + ')">'
+        + '<div class="li-rub" style="color:var(--' + (c.rubrique||'social') + ')">' + esc(RUBS[c.rubrique]||c.rubrique||'—') + '</div>'
+        + '<div class="li-texte">' + esc(c.texte) + '</div>'
+        + '<div class="li-meta">Par ' + esc(c.auteur) + (c.contact?' · '+esc(c.contact):'')
+        + (c.source?' · source : '+esc(c.source):'') + ' · ' + dateFr(c.created_at) + '</div>'
+        + '<div class="li-act"><button class="ok" data-pub="' + c.id + '">Publier</button>'
+        + '<button class="no" data-rej="' + c.id + '">Rejeter</button></div>'
+        + '</div>'
+      ).join("");
+      box.querySelectorAll("[data-pub]").forEach(b => b.onclick = () => publierContrib(b.getAttribute("data-pub"), data));
+      box.querySelectorAll("[data-rej]").forEach(b => b.onclick = () => rejeterContrib(b.getAttribute("data-rej")));
+    } catch (e) {
+      box.innerHTML = "<p class='empty' style='color:#f87171'>Erreur : " + esc(String(e && e.message || e)) + "</p>";
+    }
   }
   async function publierContrib(id, liste) {
     const c = liste.find(x => x.id === id);
