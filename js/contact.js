@@ -1,5 +1,10 @@
 /* Nibo News — formulaire "Proposer une information" */
 (function () {
+  // Récupère la connexion, en attendant si nécessaire
+  async function db() {
+    return window.DB || (window.attendreDB ? await window.attendreDB(8000) : null);
+  }
+
   const $ = id => document.getElementById(id);
   const msg = (t, k) => { const e = $("msg"); if(!e) return; e.textContent = t; e.className = "f-msg on " + (k||""); };
 
@@ -29,7 +34,7 @@
     const ent = await entrepriseId();
     if (!ent) { msg("Erreur de configuration. Écris-nous par email.", "err"); btn.disabled = false; return; }
 
-    const { error } = await DB.from("nibo_contributions").insert({
+    const { error } = await (await db()).from("nibo_contributions").insert({
       entreprise_id: ent,
       auteur: nom,
       contact: contact,

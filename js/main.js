@@ -1,5 +1,10 @@
 /* Nibo News — fil de posts (charge depuis Supabase, sinon démo) */
 (function () {
+  // Récupère la connexion, en attendant si nécessaire
+  async function db() {
+    return window.DB || (window.attendreDB ? await window.attendreDB(8000) : null);
+  }
+
   const RUBS = { politique:"Politique", sport:"Sport", social:"Social",
     economie:"Économie", international:"International", potins:"Potins" };
   const esc = s => (s || "").replace(/[&<>"']/g, c => (
@@ -44,7 +49,7 @@
     if (typeof DB === "undefined" || !DB) { brancher(); return; }
     const ent = await entrepriseId();
     if (!ent) { brancher(); return; }
-    const { data, error } = await DB.from("posts").select("*").eq("statut","publie").order("created_at",{ascending:false}).limit(50);
+    const { data, error } = await (await db()).from("posts").select("*").eq("statut","publie").order("created_at",{ascending:false}).limit(50);
     if (error || !data || !data.length) {
       // Pas encore de posts : on garde l'état vide
       brancher(); return;
@@ -114,8 +119,8 @@
         const on = btn.classList.toggle("on");
         count.textContent = on ? n+1 : Math.max(0,n-1);
         if (id && typeof DB !== "undefined" && DB) {
-          if (on) { liked.add(id); await DB.rpc("liker_post",{post_id:id}); }
-          else { liked.delete(id); await DB.rpc("deliker_post",{post_id:id}); }
+          if (on) { liked.add(id); await (await db()).rpc("liker_post",{post_id:id}); }
+          else { liked.delete(id); await (await db()).rpc("deliker_post",{post_id:id}); }
           saveLiked(liked);
         }
       });
@@ -238,7 +243,7 @@
     }
     msg.textContent = "Inscription…"; msg.className = "nl-msg";
     const ent = await entrepriseId();
-    const { error } = await DB.from("abonnes").insert({ entreprise_id: ent, email: email });
+    const { error } = await (await db()).from("abonnes").insert({ entreprise_id: ent, email: email });
     if (error) {
       msg.textContent = error.message.includes("duplicate") || error.code === "23505"
         ? "Tu es déjà abonné, merci !" : "Erreur, réessaie plus tard.";

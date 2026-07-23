@@ -1,5 +1,10 @@
 /* Nibo News — connexion / inscription des lecteurs */
 (function () {
+  // Récupère la connexion, en attendant si nécessaire
+  async function db() {
+    return window.DB || (window.attendreDB ? await window.attendreDB(8000) : null);
+  }
+
   const $ = id => document.getElementById(id);
   const msg = (t, k) => { const e = $("msg"); if(!e) return; e.textContent = t; e.className = "msg on " + (k||""); };
   const retour = new URLSearchParams(location.search).get("retour") || "index.html";
@@ -11,7 +16,7 @@
   if (lf) lf.addEventListener("submit", async e => {
     e.preventDefault();
     msg("Connexion…");
-    const { error } = await DB.auth.signInWithPassword({
+    const { error } = await (await db()).auth.signInWithPassword({
       email: $("email").value.trim(), password: $("pass").value
     });
     if (error) { msg("Email ou mot de passe incorrect.", "err"); return; }
@@ -27,7 +32,7 @@
     if (nom.length < 2) { msg("Indique ton nom.", "err"); return; }
     if ($("pass").value.length < 6) { msg("Le mot de passe doit faire au moins 6 caractères.", "err"); return; }
     msg("Création du compte…");
-    const { error } = await DB.auth.signUp({
+    const { error } = await (await db()).auth.signUp({
       email: $("email").value.trim(),
       password: $("pass").value,
       options: { data: { nom: nom } }

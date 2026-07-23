@@ -18,14 +18,8 @@
       ["creer","posts","contrib"].forEach(k => {
         const el = $("tab-" + k); if (el) el.style.display = (t === k) ? "block" : "none";
       });
-      if (t === "posts") {
-        if (window.DB) chargerPosts();
-        else $("postsList").innerHTML = "<p class='empty'>Connexion indisponible. Recharge la page.</p>";
-      }
-      if (t === "contrib") {
-        if (window.DB) chargerContrib();
-        else $("contribList").innerHTML = "<p class='empty'>Connexion indisponible. Recharge la page.</p>";
-      }
+      if (t === "posts") lancerAvecDB("postsList", chargerPosts);
+      if (t === "contrib") lancerAvecDB("contribList", chargerContrib);
     });
   });
 
@@ -33,7 +27,31 @@
   const ta = $("postTexte");
   if (ta) ta.addEventListener("input", () => { const c=$("compteur"); if(c) c.textContent = ta.value.length; });
 
-  if (!PRET || !DB) { const s = $("setupNote"); if (s) s.style.display = "block"; return; }
+  // Récupère la connexion, en attendant si nécessaire
+  async function db() {
+    return window.DB || (window.attendreDB ? await window.attendreDB(8000) : null);
+  }
+
+  // Attend que la connexion soit prête avant de charger, au lieu d'abandonner
+  async function lancerAvecDB(zoneId, fn) {
+    const box = $(zoneId);
+    if (box) box.innerHTML = "<p class='empty'>Chargement…</p>";
+    const db = window.DB || (window.attendreDB ? await window.attendreDB(8000) : null);
+    if (!db) {
+      if (box) box.innerHTML = "<p class='empty' style='color:#f87171'>Connexion au serveur impossible."
+        + "<br><br>Vérifie ta connexion internet, puis recharge la page.</p>";
+      return;
+    }
+    fn();
+  }
+
+  // Si la connexion tarde, on attend en arrière-plan sans bloquer l'interface
+  if (!window.DB && window.attendreDB) {
+    window.attendreDB(8000).then(db => {
+      if (db) { refreshAuth(); }
+      else { const s = $("setupNote"); if (s) s.style.display = "block"; }
+    });
+  }
 
   // Image de fond
   let imgFile = null;
@@ -50,18 +68,18 @@
 
   // Auth
   async function refreshAuth() {
-    const { data } = await DB.auth.getSession();
+    const { data } = await (await db()).auth.getSession();
     if (data.session) { $("loginCard").style.display="none"; $("panel").style.display="block"; }
     else { $("loginCard").style.display="block"; $("panel").style.display="none"; }
   }
   $("loginForm").addEventListener("submit", async e => {
     e.preventDefault();
     const st = $("loginMsg"); st.textContent="Connexion…"; st.className="msg on";
-    const { error } = await DB.auth.signInWithPassword({ email:$("admEmail").value.trim(), password:$("admPass").value });
+    const { error } = await (await db()).auth.signInWithPassword({ email:$("admEmail").value.trim(), password:$("admPass").value });
     if (error) { st.textContent="Email ou mot de passe incorrect."; st.className="msg on err"; return; }
     st.className="msg"; refreshAuth();
   });
-  $("logoutBtn").addEventListener("click", async () => { await DB.auth.signOut(); refreshAuth(); });
+  $("logoutBtn").addEventListener("click", async () => { await (await db()).auth.signOut(); refreshAuth(); });
 
   // Publier un post
   $("publierBtn").addEventListener("click", async () => {
@@ -76,12 +94,12 @@
     if (imgFile) {
       const ext = (imgFile.name.split(".").pop()||"jpg").toLowerCase();
       image_chemin = "nibo/posts/" + Date.now() + "." + ext;
-      const up = await DB.storage.from(BUCKET).upload(image_chemin, imgFile);
+      const up = await (await db()).storage.from(BUCKET).upload(image_chemin, imgFile);
       if (up.error) { status("Échec image : " + up.error.message,"err"); return; }
-      image_url = DB.storage.from(BUCKET).getPublicUrl(image_chemin).data.publicUrl;
+      image_url = (await db()).storage.from(BUCKET).getPublicUrl(image_chemin).data.publicUrl;
     }
 
-    const { error } = await DB.from("posts").insert({
+    const { error } = await (await db()).from("posts").insert({
       entreprise_id: ent, rubrique: rub, texte: texte,
       image_url, image_chemin,
       auteur: $("postAuteur").value.trim() || "Nibo News",
@@ -114,7 +132,7 @@
         return;
       }
       const { data, error } = await avecDelai(
-        DB.from("posts").select("*").eq("entreprise_id", ent).order("created_at",{ascending:false}),
+        (await db()).from("posts").select("*").eq("entreprise_id", ent).order("created_at",{ascending:false}),
         10000, "La connexion prend trop de temps.");
 
       if (error) {
@@ -144,9 +162,9 @@
   async function supprimerPost(id) {
     if (!confirm("Supprimer ce post définitivement ?")) return;
     try {
-      const { data:p } = await DB.from("posts").select("image_chemin").eq("id",id).maybeSingle();
-      if (p && p.image_chemin) await DB.storage.from(BUCKET).remove([p.image_chemin]);
-      const { error } = await DB.from("posts").delete().eq("id",id);
+      const { data:p } = await (await db()).from("posts").select("image_chemin").eq("id",id).maybeSingle();
+      if (p && p.image_chemin) await (await db()).storage.from(BUCKET).remove([p.image_chemin]);
+      const { error } = await (await db()).from("posts").delete().eq("id",id);
       if (error) { status("Suppression impossible : " + error.message, "err"); return; }
       status("Post supprimé.","ok");
       chargerPosts();
@@ -163,7 +181,7 @@
       const ent = await avecDelai(entrepriseId(), 10000, "La connexion prend trop de temps.");
       if (!ent) { box.innerHTML = "<p class='empty'>Entreprise introuvable.</p>"; return; }
       const { data, error } = await avecDelai(
-        DB.from("nibo_contributions").select("*")
+        (await db()).from("nibo_contributions").select("*")
           .eq("entreprise_id", ent).eq("statut","a_verifier")
           .order("created_at",{ascending:false}),
         10000, "La connexion prend trop de temps.");
@@ -192,17 +210,17 @@
     const c = liste.find(x => x.id === id);
     if (!c) return;
     const ent = await entrepriseId();
-    const { error } = await DB.from("posts").insert({
+    const { error } = await (await db()).from("posts").insert({
       entreprise_id: ent, rubrique: c.rubrique||"social", texte: c.texte,
       image_url: c.image_url, image_chemin: c.image_chemin,
       auteur: c.auteur, source: c.source || null, statut: "publie"
     });
     if (error) { status("Erreur : " + error.message,"err"); return; }
-    await DB.from("nibo_contributions").update({ statut:"valide" }).eq("id",id);
+    await (await db()).from("nibo_contributions").update({ statut:"valide" }).eq("id",id);
     status("Contribution publiée !","ok"); chargerContrib();
   }
   async function rejeterContrib(id) {
-    await DB.from("nibo_contributions").update({ statut:"rejete" }).eq("id",id);
+    await (await db()).from("nibo_contributions").update({ statut:"rejete" }).eq("id",id);
     status("Contribution rejetée.","ok"); chargerContrib();
   }
 

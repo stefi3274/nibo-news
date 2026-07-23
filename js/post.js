@@ -1,5 +1,10 @@
 /* Nibo News — page d'un post + commentaires (compte requis pour commenter) */
 (function () {
+  // Récupère la connexion, en attendant si nécessaire
+  async function db() {
+    return window.DB || (window.attendreDB ? await window.attendreDB(8000) : null);
+  }
+
   const $ = id => document.getElementById(id);
   const RUBS = { politique:"Politique", sport:"Sport", social:"Social",
     economie:"Économie", international:"International", potins:"Potins" };
@@ -25,7 +30,7 @@
     if (!id) { zone.innerHTML = '<a href="index.html" class="retour">← Retour au fil</a><p style="color:var(--texte-doux)">Post introuvable.</p>'; return; }
     if (typeof DB === "undefined" || !DB) { zone.innerHTML = '<a href="index.html" class="retour">← Retour au fil</a><p style="color:var(--texte-doux)">Connexion indisponible.</p>'; return; }
 
-    const { data: p, error } = await DB.from("posts").select("*").eq("id", id).eq("statut","publie").maybeSingle();
+    const { data: p, error } = await (await db()).from("posts").select("*").eq("id", id).eq("statut","publie").maybeSingle();
     if (error || !p) { zone.innerHTML = '<a href="index.html" class="retour">← Retour au fil</a><p style="color:var(--texte-doux)">Ce post n\'existe pas ou n\'est plus publié.</p>'; return; }
     postCourant = p;
 
@@ -64,8 +69,8 @@
       let n = parseInt(c.textContent,10)||0;
       const on = lb.classList.toggle("on");
       c.textContent = on ? n+1 : Math.max(0,n-1);
-      if (on) { liked.add(p.id); await DB.rpc("liker_post",{post_id:p.id}); }
-      else { liked.delete(p.id); await DB.rpc("deliker_post",{post_id:p.id}); }
+      if (on) { liked.add(p.id); await (await db()).rpc("liker_post",{post_id:p.id}); }
+      else { liked.delete(p.id); await (await db()).rpc("deliker_post",{post_id:p.id}); }
       try { localStorage.setItem("nibo_likes", JSON.stringify([...liked])); } catch {}
     });
 
@@ -122,7 +127,7 @@
 
   // ---------- Commentaires ----------
   async function utilisateur() {
-    const { data } = await DB.auth.getSession();
+    const { data } = await (await db()).auth.getSession();
     return data.session ? data.session.user : null;
   }
 
@@ -148,7 +153,7 @@
         + '<a class="btn-connexion" href="inscription.html">Créer un compte</a></div>';
     }
 
-    const { data, error } = await DB.from("commentaires").select("*").eq("post_id", id).order("created_at",{ascending:false});
+    const { data, error } = await (await db()).from("commentaires").select("*").eq("post_id", id).order("created_at",{ascending:false});
     const liste = $("commListe");
     $("commNb").textContent = data && data.length ? "(" + data.length + ")" : "";
     if (error || !data || !data.length) { liste.innerHTML = '<p class="comm-vide">Aucun commentaire. Sois le premier à réagir.</p>'; return; }
@@ -167,7 +172,7 @@
     if (!t) { msg.textContent = "Écris quelque chose avant de publier."; msg.className = "msg on err"; return; }
     msg.textContent = "Publication…"; msg.className = "msg on";
     const ent = await entrepriseId();
-    const { error } = await DB.from("commentaires").insert({
+    const { error } = await (await db()).from("commentaires").insert({
       post_id: id, entreprise_id: ent, user_id: u.id, auteur: nom, texte: t
     });
     if (error) { msg.textContent = "Erreur : " + error.message; msg.className = "msg on err"; return; }
