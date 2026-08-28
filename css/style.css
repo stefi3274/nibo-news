@@ -22,10 +22,13 @@
   /* Rubriques */
   --politique:#c0392b;     /* rouge grave */
   --sport:#27ae60;         /* vert vif */
-  --social:#e67e22;        /* orange chaleureux */
-  --economie:#2980b9;      /* bleu confiance */
-  --international:#16a5a5;  /* sarcelle */
-  --potins:#d6438b;        /* rose magazine */
+  --social:#e67e22;        /* orange chaleureux (legacy) */
+  --economie:#2980b9;      /* bleu confiance (legacy) */
+  --international:#16a5a5;  /* sarcelle (legacy) */
+  --potins:#d6438b;        /* rose magazine (legacy) */
+  --societe:#f39c12;       /* ambre chaleureux */
+  --art:#9b59b6;           /* violet artistique */
+  --technologique:#00b4d8; /* cyan techno */
 
   --serif:'Fraunces',Georgia,serif;
   --sans:'Inter',system-ui,sans-serif;
@@ -46,6 +49,9 @@ body{background:var(--gris);color:var(--texte);font-family:var(--sans);line-heig
 .r-economie{--c:var(--economie)}
 .r-international{--c:var(--international)}
 .r-potins{--c:var(--potins)}
+.r-societe{--c:var(--societe)}
+.r-art{--c:var(--art)}
+.r-technologique{--c:var(--technologique)}
 
 /* ============================================================
    En-tête / barre de navigation
@@ -76,11 +82,16 @@ header{position:sticky;top:0;z-index:100;background:rgba(26,26,31,.85);
 /* Toutes les rubriques visibles : elles passent à la ligne au lieu de défiler */
 .rubriques-inner{max-width:var(--wrap);margin:0 auto;display:flex;flex-wrap:wrap;
   gap:7px;padding:12px 20px;justify-content:center}
-.rub-chip{background:none;border:1.5px solid var(--gris-3);color:var(--texte-doux);
-  font-family:inherit;font-weight:600;font-size:.85rem;padding:7px 15px;border-radius:20px;
-  cursor:pointer;transition:all .2s;white-space:nowrap}
-.rub-chip:hover{border-color:var(--c,var(--pourpre));color:var(--blanc)}
-.rub-chip.on{background:var(--c,var(--pourpre));border-color:var(--c,var(--pourpre));color:#fff}
+.rub-chip{background:none;border:1.5px solid var(--c,var(--gris-3));color:var(--c,var(--texte-doux));
+  font-family:inherit;font-weight:700;font-size:.85rem;padding:7px 16px;border-radius:20px;
+  cursor:pointer;transition:all .25s cubic-bezier(.34,1.56,.64,1);white-space:nowrap}
+.rub-chip:hover{background:var(--c,var(--pourpre));border-color:var(--c,var(--pourpre));color:#fff;
+  transform:translateY(-2px) scale(1.05);
+  box-shadow:0 6px 18px -4px var(--c,var(--pourpre-glow))}
+.rub-chip.on{background:linear-gradient(135deg,var(--c,var(--pourpre)),var(--c,var(--pourpre)) 60%,rgba(255,255,255,.25));
+  border-color:var(--c,var(--pourpre));color:#fff;
+  box-shadow:0 4px 16px -2px var(--c,var(--pourpre-glow)),0 0 0 3px color-mix(in srgb,var(--c,var(--pourpre)) 25%,transparent);
+  transform:scale(1.06)}
 
 /* ============================================================
    Fil de posts

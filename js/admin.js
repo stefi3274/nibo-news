@@ -3,8 +3,9 @@
   const $ = id => document.getElementById(id);
 
   const BUCKET = "Images";
-  const RUBS = { politique:"Politique", sport:"Sport", social:"Social",
-    economie:"Économie", international:"International", potins:"Potins" };
+  const RUBS = { politique:"🔥 Politique", sport:"⚽ Sport", societe:"💬 Société",
+    art:"🎨 Art", technologique:"💻 Technologique",
+    social:"Social", economie:"Économie", international:"International", potins:"Potins" };
   const esc = s => (s || "").replace(/[&<>"']/g, c => (
     { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
   const status = (m, t) => { const e = $("admMsg"); if(e){e.textContent = m; e.className = "msg on " + (t||"ok");} };
@@ -191,8 +192,8 @@
       }
       if (!data || !data.length) { box.innerHTML = "<p class='empty'>Aucune contribution à vérifier.</p>"; return; }
       box.innerHTML = data.map(c =>
-        '<div class="liste-item r-' + (c.rubrique||'social') + '" style="border-left-color:var(--' + (c.rubrique||'social') + ')">'
-        + '<div class="li-rub" style="color:var(--' + (c.rubrique||'social') + ')">' + esc(RUBS[c.rubrique]||c.rubrique||'—') + '</div>'
+        '<div class="liste-item r-' + (c.rubrique||'societe') + '" style="border-left-color:var(--' + (c.rubrique||'societe') + ')">'
+        + '<div class="li-rub" style="color:var(--' + (c.rubrique||'societe') + ')">' + esc(RUBS[c.rubrique]||c.rubrique||'—') + '</div>'
         + '<div class="li-texte">' + esc(c.texte) + '</div>'
         + '<div class="li-meta">Par ' + esc(c.auteur) + (c.contact?' · '+esc(c.contact):'')
         + (c.source?' · source : '+esc(c.source):'') + ' · ' + dateFr(c.created_at) + '</div>'
@@ -211,7 +212,7 @@
     if (!c) return;
     const ent = await entrepriseId();
     const { error } = await (await db()).from("posts").insert({
-      entreprise_id: ent, rubrique: c.rubrique||"social", texte: c.texte,
+      entreprise_id: ent, rubrique: c.rubrique||"societe", texte: c.texte,
       image_url: c.image_url, image_chemin: c.image_chemin,
       auteur: c.auteur, source: c.source || null, statut: "publie"
     });

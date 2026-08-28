@@ -5,8 +5,9 @@
     return window.DB || (window.attendreDB ? await window.attendreDB(8000) : null);
   }
 
-  const RUBS = { politique:"Politique", sport:"Sport", social:"Social",
-    economie:"Économie", international:"International", potins:"Potins" };
+  const RUBS = { politique:"🔥 Politique", sport:"⚽ Sport", societe:"💬 Société",
+    art:"🎨 Art", technologique:"💻 Technologique",
+    social:"Social", economie:"Économie", international:"International", potins:"Potins" };
   const esc = s => (s || "").replace(/[&<>"']/g, c => (
     { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
   const fil = document.getElementById("fil");
