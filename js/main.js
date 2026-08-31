@@ -5,9 +5,9 @@
     return window.DB || (window.attendreDB ? await window.attendreDB(8000) : null);
   }
 
-  const RUBS = { politique:"🔥 Politique", sport:"⚽ Sport", societe:"💬 Société",
-    art:"🎨 Art", technologique:"💻 Technologique",
-    social:"Social", economie:"Économie", international:"International", potins:"Potins" };
+  const RUBS = { divers:"🔥 Divers", sport:"⚽ Sport", societe:"💬 Société",
+    art:"🎨 Art", technologique:"💻 Technologique", ecologie:"🌿 Écologie et Météo",
+    politique:"Politique", social:"Social", economie:"Économie", international:"International", potins:"Potins" };
   const esc = s => (s || "").replace(/[&<>"']/g, c => (
     { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
   const fil = document.getElementById("fil");
@@ -206,7 +206,7 @@
 
   // Reconstitue les données d'un post depuis sa carte affichée
   function postDepuisCarte(el) {
-    let rubrique = "politique";
+    let rubrique = "divers";
     for (const c of el.classList) if (c.startsWith("r-")) rubrique = c.slice(2);
     const visuel = el.querySelector(".post-visuel");
     let image_url = null;

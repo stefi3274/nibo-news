@@ -2,9 +2,10 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
+<script>(function(){try{var t=localStorage.getItem("nibo-theme");if(t==="dark")document.documentElement.setAttribute("data-theme","dark");}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nibo News · L'info qui circule</title>
-<meta name="description" content="Nibo News — l'actualité haïtienne et internationale en bref. Politique, sport, social, économie, international, potins.">
+<meta name="description" content="Nibo News — l'actualité haïtienne et internationale en bref. Divers, société, art, sport, technologique, écologie et météo.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -19,6 +20,10 @@
       <span class="logo-txt">Nibo<b>News</b></span>
     </a>
     <div class="nav-actions"><a href="a-propos.html" class="nav-lien">À propos</a>
+      <button class="theme-toggle" type="button" aria-label="Changer de thème" title="Changer de thème">
+        <svg class="ico-soleil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        <svg class="ico-lune" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+      </button>
       <a href="connexion.html" class="btn-connexion">Se connecter</a>
     </div>
   </div>
@@ -27,11 +32,12 @@
 <nav class="rubriques">
   <div class="rubriques-inner">
     <button class="rub-chip on" data-rub="tous">✨ Tout</button>
-    <button class="rub-chip r-politique" data-rub="politique">🔥 Politique</button>
+    <button class="rub-chip r-divers" data-rub="divers">🔥 Divers</button>
     <button class="rub-chip r-societe" data-rub="societe">💬 Société</button>
     <button class="rub-chip r-art" data-rub="art">🎨 Art</button>
     <button class="rub-chip r-sport" data-rub="sport">⚽ Sport</button>
     <button class="rub-chip r-technologique" data-rub="technologique">💻 Technologique</button>
+    <button class="rub-chip r-ecologie" data-rub="ecologie">🌿 Écologie et Météo</button>
   </div>
   <div class="langues-inner">
     <button class="lang-filtre on" data-lang="tous">Toutes langues</button>
@@ -104,5 +110,6 @@
 <script src="js/supabase-config.js"></script>
 <script src="js/image.js"></script>
 <script src="js/main.js"></script>
+<script src="js/theme.js"></script>
 </body>
 </html>

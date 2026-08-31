@@ -1,26 +1,27 @@
 /* ============================================================
    Nibo News — média de relais
-   Fond gris ardoise · thème pourpre · 6 rubriques colorées
+   Thème clair (par défaut) + thème sombre (bascule) · pourpre · rubriques colorées
    ============================================================ */
 :root{
-  /* Base */
-  --gris:#1a1a1f;          /* fond principal, gris très sombre */
-  --gris-2:#24242c;        /* cartes, surfaces */
-  --gris-3:#2f2f39;        /* survol, bordures */
-  --gris-line:#37373f;
-  --blanc:#f4f4f7;
-  --texte:#e6e6ec;
-  --texte-doux:#9a9aa8;
-  --texte-faible:#6b6b78;
+  /* Base — thème clair (par défaut) */
+  --gris:#f6f6f8;          /* fond principal */
+  --gris-2:#ffffff;        /* cartes, surfaces */
+  --gris-3:#ececf1;        /* survol, bordures */
+  --gris-line:#e3e3e9;
+  --blanc:#17171c;         /* texte fort (titres) */
+  --texte:#2c2c34;
+  --texte-doux:#6b6b78;
+  --texte-faible:#8f8f9c;
+  --voile:rgba(255,255,255,.85);
 
   /* Pourpre — thème principal */
   --pourpre:#8b3fd4;
-  --pourpre-c:#a45ee8;     /* clair */
+  --pourpre-c:#7a35bd;     /* ajusté pour contraste sur fond clair */
   --pourpre-d:#6d2bb0;     /* foncé */
-  --pourpre-glow:rgba(139,63,212,.25);
+  --pourpre-glow:rgba(139,63,212,.18);
 
   /* Rubriques */
-  --politique:#c0392b;     /* rouge grave */
+  --politique:#c0392b;     /* rouge grave (legacy) */
   --sport:#27ae60;         /* vert vif */
   --social:#e67e22;        /* orange chaleureux (legacy) */
   --economie:#2980b9;      /* bleu confiance (legacy) */
@@ -29,6 +30,8 @@
   --societe:#f39c12;       /* ambre chaleureux */
   --art:#9b59b6;           /* violet artistique */
   --technologique:#00b4d8; /* cyan techno */
+  --divers:#c0392b;        /* rouge grave (ex-Politique) */
+  --ecologie:#16a085;      /* vert-sarcelle nature/ciel */
 
   --serif:'Fraunces',Georgia,serif;
   --sans:'Inter',system-ui,sans-serif;
@@ -37,10 +40,25 @@
   --wrap:640px;   /* colonne centrale façon fil social */
 }
 
+/* Base — thème sombre (activé via data-theme="dark" sur <html>) */
+html[data-theme="dark"]{
+  --gris:#1a1a1f;
+  --gris-2:#24242c;
+  --gris-3:#2f2f39;
+  --gris-line:#37373f;
+  --blanc:#f4f4f7;
+  --texte:#e6e6ec;
+  --texte-doux:#9a9aa8;
+  --texte-faible:#6b6b78;
+  --voile:rgba(26,26,31,.85);
+  --pourpre-c:#a45ee8;
+  --pourpre-glow:rgba(139,63,212,.25);
+}
+
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{background:var(--gris);color:var(--texte);font-family:var(--sans);line-height:1.6;
-  font-size:16px;-webkit-font-smoothing:antialiased}
+  font-size:16px;-webkit-font-smoothing:antialiased;transition:background .25s,color .25s}
 
 /* Couleurs par rubrique (variable --c injectée) */
 .r-politique{--c:var(--politique)}
@@ -52,11 +70,25 @@ body{background:var(--gris);color:var(--texte);font-family:var(--sans);line-heig
 .r-societe{--c:var(--societe)}
 .r-art{--c:var(--art)}
 .r-technologique{--c:var(--technologique)}
+.r-divers{--c:var(--divers)}
+.r-ecologie{--c:var(--ecologie)}
+
+/* ============================================================
+   Bascule de thème
+   ============================================================ */
+.theme-toggle{background:none;border:1px solid var(--gris-3);color:var(--texte);
+  width:38px;height:38px;border-radius:10px;cursor:pointer;display:inline-flex;
+  align-items:center;justify-content:center;transition:all .2s;flex:none}
+.theme-toggle:hover{border-color:var(--pourpre);color:var(--pourpre-c)}
+.theme-toggle svg{width:18px;height:18px}
+.theme-toggle .ico-lune{display:none}
+html[data-theme="dark"] .theme-toggle .ico-soleil{display:none}
+html[data-theme="dark"] .theme-toggle .ico-lune{display:inline-flex}
 
 /* ============================================================
    En-tête / barre de navigation
    ============================================================ */
-header{position:sticky;top:0;z-index:100;background:rgba(26,26,31,.85);
+header{position:sticky;top:0;z-index:100;background:var(--voile);
   backdrop-filter:blur(14px);border-bottom:1px solid var(--gris-line)}
 .nav{max-width:var(--wrap);margin:0 auto;display:flex;align-items:center;
   justify-content:space-between;padding:14px 20px}
@@ -77,7 +109,7 @@ header{position:sticky;top:0;z-index:100;background:rgba(26,26,31,.85);
 /* ============================================================
    Filtres de rubriques
    ============================================================ */
-.rubriques{position:sticky;top:67px;z-index:90;background:rgba(26,26,31,.85);
+.rubriques{position:sticky;top:67px;z-index:90;background:var(--voile);
   backdrop-filter:blur(14px);border-bottom:1px solid var(--gris-line)}
 /* Toutes les rubriques visibles : elles passent à la ligne au lieu de défiler */
 .rubriques-inner{max-width:var(--wrap);margin:0 auto;display:flex;flex-wrap:wrap;
@@ -99,25 +131,26 @@ header{position:sticky;top:0;z-index:100;background:rgba(26,26,31,.85);
 .fil{max-width:var(--wrap);margin:0 auto;padding:24px 20px 80px}
 
 /* Carte post = l'image elle-même */
-.post{background:var(--gris-2);border:1px solid var(--gris-line);border-radius:var(--r-lg);
-  margin-bottom:20px;overflow:hidden;transition:border-color .2s}
-.post:hover{border-color:var(--gris-3)}
+.post{background:var(--gris-2);border:1px solid var(--gris-line);border-radius:var(--r);
+  margin-bottom:14px;overflow:hidden;transition:border-color .2s}
+.post:hover{border-color:var(--c,var(--gris-3))}
 
 /* Zone capturée pour le téléchargement (le "visuel") */
-.post-visuel{position:relative;padding:26px 26px 30px;
-  background:linear-gradient(160deg, color-mix(in srgb, var(--c) 16%, var(--gris-2)), var(--gris-2) 70%);
-  border-top:4px solid var(--c)}
-.post-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
-.post-rub{display:inline-flex;align-items:center;gap:7px;font-size:.78rem;font-weight:700;
-  text-transform:uppercase;letter-spacing:.08em;color:var(--c)}
-.post-rub::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c)}
+.post-visuel{position:relative;padding:20px 22px 22px;
+  background:var(--gris-2);
+  border-top:3px solid var(--c)}
+.post-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.post-rub{display:inline-flex;align-items:center;font-size:.72rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.06em;color:var(--c);
+  background:color-mix(in srgb, var(--c) 13%, transparent);
+  padding:3px 9px;border-radius:6px}
 .post-nino{font-family:var(--serif);font-size:.95rem;font-weight:600;color:var(--texte-doux)}
 .post-nino b{color:var(--pourpre-c)}
-.post-texte{font-family:var(--serif);font-size:1.5rem;line-height:1.4;color:var(--blanc);
+.post-texte{font-family:var(--serif);font-size:1.28rem;line-height:1.45;color:var(--blanc);
   font-weight:500;letter-spacing:-.01em}
-.post-visuel.court .post-texte{font-size:1.9rem;line-height:1.35}
-.post-foot{display:flex;align-items:center;gap:8px;margin-top:22px;padding-top:16px;
-  border-top:1px solid color-mix(in srgb, var(--c) 20%, transparent)}
+.post-visuel.court .post-texte{font-size:1.5rem;line-height:1.4}
+.post-foot{display:flex;align-items:center;gap:8px;margin-top:16px;padding-top:12px;
+  border-top:1px solid var(--gris-line)}
 .post-foot .pf-dot{width:5px;height:5px;border-radius:50%;background:var(--texte-faible)}
 .post-date{font-size:.82rem;color:var(--texte-doux)}
 .post-watermark{margin-left:auto;font-family:var(--serif);font-size:.85rem;color:var(--texte-faible)}

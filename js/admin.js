@@ -3,9 +3,9 @@
   const $ = id => document.getElementById(id);
 
   const BUCKET = "Images";
-  const RUBS = { politique:"🔥 Politique", sport:"⚽ Sport", societe:"💬 Société",
-    art:"🎨 Art", technologique:"💻 Technologique",
-    social:"Social", economie:"Économie", international:"International", potins:"Potins" };
+  const RUBS = { divers:"🔥 Divers", sport:"⚽ Sport", societe:"💬 Société",
+    art:"🎨 Art", technologique:"💻 Technologique", ecologie:"🌿 Écologie et Météo",
+    politique:"Politique", social:"Social", economie:"Économie", international:"International", potins:"Potins" };
   const esc = s => (s || "").replace(/[&<>"']/g, c => (
     { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
   const status = (m, t) => { const e = $("admMsg"); if(e){e.textContent = m; e.className = "msg on " + (t||"ok");} };
